@@ -17,123 +17,77 @@ body {
   overflow: hidden;
 }
 
+/* Background */
 .hero-bg {
   position: absolute;
   inset: 0;
   background: url("images/banner-bg.jpg") center / cover no-repeat;
-  animation: drift 40s linear infinite;
-  filter: blur(6px) brightness(0.6);
+  filter: blur(8px) brightness(0.55);
+  animation: bg-drift 50s linear infinite;
 }
 
-@keyframes drift {
+@keyframes bg-drift {
   from { transform: scale(1) translateY(0); }
-  to   { transform: scale(1.1) translateY(-40px); }
+  to   { transform: scale(1.1) translateY(-60px); }
 }
 
-/* ===== HITBOX ===== */
-.title-hitbox {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  display: inline-block;
+/* Text container */
+.hero-text {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 /* ===== TITLE (LAVA LAMP) ===== */
 .hero-title {
   font-family: "Terpsichora";
-  font-size: clamp(3rem, 10vw, 8rem);
-  letter-spacing: 0.15em;
+  font-size: clamp(3.5rem, 10vw, 8rem);
+  letter-spacing: 0.14em;
   color: #f2f2f2;
 
-  animation:
-    lava-scale 18s ease-in-out infinite,
-    lava-blur 14s ease-in-out infinite,
-    lava-spacing 22s ease-in-out infinite;
-
   filter: blur(1px);
-  transition: opacity 0.6s ease;
-  cursor: pointer;
+  animation:
+    lava-scale 20s ease-in-out infinite,
+    lava-blur 16s ease-in-out infinite;
+
+  transition: transform 0.15s ease-out;
 }
 
 /* Lava animations */
 @keyframes lava-scale {
   0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.06); }
+  50% { transform: scale(1.05); }
 }
 
 @keyframes lava-blur {
-  0%, 100% { filter: blur(0.6px); }
-  50% { filter: blur(2px); }
+  0%, 100% { filter: blur(0.7px); }
+  50% { filter: blur(1.6px); }
 }
 
-@keyframes lava-spacing {
-  0%, 100% { letter-spacing: 0.14em; }
-  50% { letter-spacing: 0.18em; }
-}
-
-/* ===== SUBMIT ===== */
-.hero-submit {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  font-family: "Terpsichora";
-  font-size: clamp(2rem, 8vw, 6rem);
-  letter-spacing: 0.12em;
-
+/* ===== SUBTITLE ===== */
+.hero-subtitle {
+  margin-top: 1.5rem;
+  font-family: "Libre Baskerville", Georgia, serif;
+  font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
   color: #b30000;
-  opacity: 0;
-  transform: scale(0.95);
-  transition: all 0.6s ease;
-  pointer-events: none;
-}
-
-/* ===== HOVER ONLY ON TEXT ===== */
-.title-hitbox:hover .hero-title {
-  opacity: 0;
-}
-
-.title-hitbox:hover .hero-submit {
-  opacity: 1;
-  transform: scale(1);
-}
-
-/* ===== NAV ===== */
-.nav {
-  padding: 1rem 2rem;
-  border-bottom: 1px solid #222;
-}
-
-.nav span {
-  margin-right: 1.5rem;
-  font-size: 0.9rem;
-}
-
-.nav .disabled {
-  opacity: 0.3;
-}
-
-.nav .active {
-  cursor: pointer;
-}
-
-/* ===== CONTENT ===== */
-main {
-  max-width: 720px;
-  padding: 3rem 2rem;
+  opacity: 0.85;
 }
 
 /* ===== MOBILE ===== */
 @media (max-width: 768px) {
   .hero {
-    height: 70vh;
+    height: 80vh;
   }
 
-  .hero-submit {
-    opacity: 1;
-    font-size: 1.5rem;
+  .hero-subtitle {
+    letter-spacing: 0.15em;
+    text-align: center;
+    padding: 0 1rem;
   }
 }
