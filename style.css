@@ -50,3 +50,67 @@ body {
     letter-spacing: 0.18em;
   }
 }
+
+
+/* ===== MANIFEST BLOCK ===== */
+.manifest-wrapper {
+  display: flex;
+  justify-content: center;
+  padding: 6rem 1rem 8rem;
+  background: #0b0b0b;
+}
+
+/* Outer thick frame */
+.manifest-frame {
+  border: 2px solid #f2f2f2;
+  padding: 1.2rem;
+}
+
+/* Inner thin frame */
+.manifest-inner {
+  border: 1px solid #f2f2f2;
+  padding: 4rem 3.5rem;
+  background: #0b0b0b;
+  max-width: 800px;
+}
+
+/* Title */
+.manifest-title {
+  font-family: "Terpsichora";
+  font-size: 3rem;
+  letter-spacing: 0.2em;
+  text-align: center;
+  margin: 0 0 3rem;
+  color: #f2f2f2;
+}
+
+/* Text */
+.manifest-text {
+  color: #8f2a2a; /* тёплый читаемый красный */
+  font-size: 1.05rem;
+  line-height: 1.8;
+}
+
+.manifest-text p {
+  margin-bottom: 1.6rem;
+}
+
+/* ===== MOBILE ===== */
+@media (max-width: 768px) {
+  .lava-title {
+    font-size: 64px;
+  }
+
+  .lava-subtitle {
+    font-size: 14px;
+    letter-spacing: 0.18em;
+  }
+
+  .manifest-inner {
+    padding: 2.5rem 1.8rem;
+  }
+
+  .manifest-title {
+    font-size: 2rem;
+  }
+}
