@@ -19,54 +19,59 @@
 >
 
   <defs>
-    <!-- Base lava movement -->
-    <filter id="lava">
+    <!-- LAVA + SOFT BREATHING BLUR -->
+    <filter id="lava" x="-20%" y="-20%" width="140%" height="140%">
+
+      <!-- Organic turbulence -->
       <feTurbulence
         type="fractalNoise"
-        baseFrequency="0.012 0.02"
-        numOctaves="2"
-        seed="3"
+        baseFrequency="0.01 0.02"
+        numOctaves="3"
+        seed="2"
         result="noise"
       >
         <animate
           attributeName="baseFrequency"
-          dur="22s"
+          dur="26s"
           values="
-            0.012 0.02;
-            0.016 0.025;
-            0.012 0.02
+            0.009 0.018;
+            0.014 0.024;
+            0.010 0.020
           "
           repeatCount="indefinite"
         />
       </feTurbulence>
 
+      <!-- Displacement -->
       <feDisplacementMap
         in="SourceGraphic"
         in2="noise"
-        scale="20"
+        scale="22"
+        xChannelSelector="R"
+        yChannelSelector="G"
         result="displaced"
       />
 
-      <!-- SUBTLE DYNAMIC BLUR -->
+      <!-- VERY SOFT BLUR (breathing) -->
       <feGaussianBlur
         in="displaced"
-        stdDeviation="1.4"
+        stdDeviation="0.4"
         result="blurred"
       >
         <animate
           attributeName="stdDeviation"
-          dur="18s"
-          values="0.2; 1.1; 0.3"
+          dur="19s"
+          values="0.35; 0.6; 0.4; 0.55; 0.38"
+          keyTimes="0; 0.3; 0.55; 0.75; 1"
           repeatCount="indefinite"
         />
       </feGaussianBlur>
 
-      <!-- Mix sharp + blurred -->
-      <feBlend
-        mode="normal"
-        in="displaced"
-        in2="blurred"
-      />
+      <!-- Final merge -->
+      <feMerge>
+        <feMergeNode in="blurred"/>
+      </feMerge>
+
     </filter>
   </defs>
 
