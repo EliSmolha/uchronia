@@ -6,88 +6,47 @@
 body {
   margin: 0;
   background: #0b0b0b;
-  color: #e6e6e6;
-  font-family: "Libre Baskerville", Georgia, serif;
 }
 
-/* ===== HERO ===== */
+/* HERO */
 .hero {
-  position: relative;
   height: 100vh;
-  overflow: hidden;
-}
-
-/* Background */
-.hero-bg {
-  position: absolute;
-  inset: 0;
-  background: url("images/banner-bg.jpg") center / cover no-repeat;
-  filter: blur(8px) brightness(0.55);
-  animation: bg-drift 50s linear infinite;
-}
-
-@keyframes bg-drift {
-  from { transform: scale(1) translateY(0); }
-  to   { transform: scale(1.1) translateY(-60px); }
-}
-
-/* Text container */
-.hero-text {
-  position: relative;
-  z-index: 2;
-  height: 100%;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
 }
 
-/* ===== TITLE (LAVA LAMP) ===== */
-.hero-title {
+/* SVG */
+.lava-svg {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+/* TITLE */
+.lava-title {
   font-family: "Terpsichora";
-  font-size: clamp(3.5rem, 10vw, 8rem);
-  letter-spacing: 0.14em;
-  color: #f2f2f2;
-
-  filter: blur(1px);
-  animation:
-    lava-scale 20s ease-in-out infinite,
-    lava-blur 16s ease-in-out infinite;
-
-  transition: transform 0.15s ease-out;
+  font-size: 120px;
+  letter-spacing: 0.15em;
+  fill: #f2f2f2;
 }
 
-/* Lava animations */
-@keyframes lava-scale {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-}
-
-@keyframes lava-blur {
-  0%, 100% { filter: blur(0.7px); }
-  50% { filter: blur(1.6px); }
-}
-
-/* ===== SUBTITLE ===== */
-.hero-subtitle {
-  margin-top: 1.5rem;
-  font-family: "Libre Baskerville", Georgia, serif;
-  font-size: clamp(0.9rem, 2.5vw, 1.2rem);
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: #b30000;
+/* SUBTITLE */
+.lava-subtitle {
+  font-family: "Arial", sans-serif;
+  font-size: 20px;
+  letter-spacing: 0.25em;
+  fill: #b30000;
   opacity: 0.85;
 }
 
-/* ===== MOBILE ===== */
+/* MOBILE */
 @media (max-width: 768px) {
-  .hero {
-    height: 80vh;
+  .lava-title {
+    font-size: 64px;
   }
 
-  .hero-subtitle {
-    letter-spacing: 0.15em;
-    text-align: center;
-    padding: 0 1rem;
+  .lava-subtitle {
+    font-size: 14px;
+    letter-spacing: 0.18em;
   }
 }
