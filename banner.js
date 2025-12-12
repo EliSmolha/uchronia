@@ -1,11 +1,11 @@
-const hero = document.querySelector(".hero");
+const hitbox = document.querySelector(".title-hitbox");
 const title = document.getElementById("heroTitle");
 const submit = document.getElementById("heroSubmit");
 
-if (hero && title && submit) {
+if (hitbox && title && submit) {
   let toggled = false;
 
-  hero.addEventListener("click", () => {
+  hitbox.addEventListener("click", () => {
     if (window.innerWidth > 768) return;
 
     toggled = !toggled;
