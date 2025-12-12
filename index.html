@@ -4,29 +4,74 @@
   <meta charset="UTF-8">
   <title>УХРОНИЯ</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Libre+Baskerville&display=swap">
-
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <section class="hero">
-  <div class="hero-bg"></div>
 
-  <div class="hero-text">
-    <div class="hero-title" id="lavaTitle">
-      УХРОНИЯ
-    </div>
+<svg
+  viewBox="0 0 1000 500"
+  width="100%"
+  height="100%"
+  preserveAspectRatio="xMidYMid meet"
+  class="lava-svg"
+>
 
-    <div class="hero-subtitle">
-      ЛЕВОРАДИКАЛЬНЫЙ ЛИТЕРАТУРНЫЙ ЖУРНАЛ
-    </div>
-  </div>
+  <defs>
+    <!-- Lava turbulence -->
+    <filter id="lava">
+      <feTurbulence
+        type="fractalNoise"
+        baseFrequency="0.01 0.02"
+        numOctaves="3"
+        seed="2"
+      >
+        <animate
+          attributeName="baseFrequency"
+          dur="20s"
+          values="
+            0.01 0.02;
+            0.015 0.025;
+            0.01 0.02
+          "
+          repeatCount="indefinite"
+        />
+      </feTurbulence>
+
+      <feDisplacementMap
+        in="SourceGraphic"
+        scale="22"
+      />
+    </filter>
+  </defs>
+
+  <!-- TITLE -->
+  <text
+    x="50%"
+    y="45%"
+    text-anchor="middle"
+    dominant-baseline="middle"
+    class="lava-title"
+    filter="url(#lava)"
+  >
+    УХРОНИЯ
+  </text>
+
+  <!-- SUBTITLE -->
+  <text
+    x="50%"
+    y="62%"
+    text-anchor="middle"
+    dominant-baseline="middle"
+    class="lava-subtitle"
+  >
+    ЛЕВОРАДИКАЛЬНЫЙ ЛИТЕРАТУРНЫЙ ЖУРНАЛ
+  </text>
+
+</svg>
+
 </section>
 
-<script src="lava.js"></script>
 </body>
 </html>
