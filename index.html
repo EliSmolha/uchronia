@@ -4,10 +4,17 @@
   <meta charset="UTF-8">
   <title>УХРОНИЯ</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Propaganda font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500&display=swap">
+
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+<!-- HERO / SVG LAVA -->
 <section class="hero">
 
 <svg
@@ -19,66 +26,39 @@
 >
 
   <defs>
-    <!-- LAVA + SOFT BREATHING BLUR -->
     <filter id="lava" x="-20%" y="-20%" width="140%" height="140%">
-
-      <!-- Organic turbulence -->
       <feTurbulence
         type="fractalNoise"
-        baseFrequency="0.01 0.02"
-        numOctaves="3"
-        seed="2"
+        baseFrequency="0.012 0.018"
+        numOctaves="2"
+        seed="8"
         result="noise"
       >
         <animate
           attributeName="baseFrequency"
-          dur="26s"
-          values="
-            0.009 0.018;
-            0.014 0.024;
-            0.010 0.020
-          "
+          dur="120s"
+          from="0.012 0.018"
+          to="0.013 0.019"
           repeatCount="indefinite"
         />
       </feTurbulence>
 
-      <!-- Displacement -->
       <feDisplacementMap
         in="SourceGraphic"
         in2="noise"
-        scale="22"
+        scale="18"
         xChannelSelector="R"
         yChannelSelector="G"
         result="displaced"
       />
 
-      <!-- VERY SOFT BLUR (breathing) -->
-      <feGaussianBlur
-        in="displaced"
-        stdDeviation="0.4"
-        result="blurred"
-      >
-        <animate
-          attributeName="stdDeviation"
-          dur="19s"
-          values="0.8; 1.9; 0.8; 0.4; 1.5"
-          keyTimes="0; 0.3; 0.55; 0.75; 1"
-          repeatCount="indefinite"
-        />
-      </feGaussianBlur>
-
-      <!-- Final merge -->
-      <feMerge>
-        <feMergeNode in="blurred"/>
-      </feMerge>
-
+      <feGaussianBlur in="displaced" stdDeviation="0.45" />
     </filter>
   </defs>
 
-  <!-- TITLE -->
   <text
     x="50%"
-    y="45%"
+    y="46%"
     text-anchor="middle"
     dominant-baseline="middle"
     class="lava-title"
@@ -87,10 +67,9 @@
     УХРОНИЯ
   </text>
 
-  <!-- SUBTITLE -->
   <text
     x="50%"
-    y="62%"
+    y="64%"
     text-anchor="middle"
     dominant-baseline="middle"
     class="lava-subtitle"
@@ -101,6 +80,7 @@
 </svg>
 
 </section>
+
 <!-- MANIFEST -->
 <section class="manifest-wrapper">
 
@@ -111,19 +91,21 @@
 
       <div class="manifest-text">
         <p>
-          Мы отказываемся от литературы как товара и от автора как бренда.
-          Мы пишем не для рынка, не для алгоритма и не для комфорта.
+          Мы отказываемся от литературы как товара
+          и от автора как бренда.
+        </p>
+
+        <p>
+          Мы пишем не для рынка,
+          не для алгоритма
+          и не для комфорта.
         </p>
 
         <p>
           Ухрония — это работа с невозможным временем,
           с утопиями, которые не состоялись,
-          и с памятью, вытесненной из официальных нарративов.
-        </p>
-
-        <p>
-          Мы признаём конфликт формой мышления,
-          а язык — полем борьбы.
+          и с памятью,
+          вытесненной из официальных нарративов.
         </p>
       </div>
 
