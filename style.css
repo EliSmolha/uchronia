@@ -1,0 +1,119 @@
+@font-face {
+  font-family: "Terpsichora";
+  src: url("fonts/Terpsichora-Regular.woff2") format("woff2");
+}
+body {
+  margin: 0;
+  background: #0b0b0b;
+  color: #e6e6e6;
+  font-family: "Libre Baskerville", Georgia, serif;
+}
+.hero {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background: url("images/banner-bg.jpg") center / cover no-repeat;
+  animation: drift 40s linear infinite;
+  filter: blur(6px) brightness(0.6);
+}
+
+@keyframes drift {
+  from { transform: scale(1) translateY(0); }
+  to   { transform: scale(1.1) translateY(-40px); }
+}
+.hero-title {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-family: "Terpsichora";
+  font-size: clamp(3rem, 10vw, 8rem);
+  letter-spacing: 0.15em;
+
+  color: #f2f2f2;
+  filter: blur(0.8px);
+  animation: pulse 6s ease-in-out infinite;
+
+  cursor: pointer;
+  z-index: 2;
+}
+
+@keyframes pulse {
+  0%, 100% { filter: blur(0.6px); }
+  50% { filter: blur(1.5px); }
+}
+.hero-submit {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-family: "Terpsichora";
+  font-size: clamp(2rem, 8vw, 6rem);
+  letter-spacing: 0.12em;
+
+  color: #b30000;
+  opacity: 0;
+  transform: scale(0.9);
+  transition: all 0.6s ease;
+  z-index: 3;
+}
+.hero:hover .hero-title {
+  opacity: 0;
+  transform: scale(1.1);
+}
+
+.hero:hover .hero-submit {
+  opacity: 1;
+  transform: scale(1);
+}
+.nav {
+  padding: 1rem 2rem;
+  border-bottom: 1px solid #222;
+}
+
+.nav span {
+  margin-right: 1.5rem;
+  font-size: 0.9rem;
+}
+
+.nav .disabled {
+  opacity: 0.3;
+}
+
+.nav .active {
+  cursor: pointer;
+}
+@media (max-width: 768px) {
+  .hero {
+    height: 70vh;
+  }
+
+  .hero-submit {
+    opacity: 1;
+    position: absolute;
+    bottom: 2rem;
+    font-size: 1.5rem;
+  }
+}
+const hero = document.querySelector(".hero");
+const title = document.getElementById("heroTitle");
+const submit = document.getElementById("heroSubmit");
+
+let toggled = false;
+
+hero.addEventListener("click", () => {
+  if (window.innerWidth > 768) return;
+
+  toggled = !toggled;
+  title.style.opacity = toggled ? "0" : "1";
+  submit.style.opacity = toggled ? "1" : "0";
+});
