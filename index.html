@@ -19,21 +19,22 @@
 >
 
   <defs>
-    <!-- Lava turbulence -->
+    <!-- Base lava movement -->
     <filter id="lava">
       <feTurbulence
         type="fractalNoise"
-        baseFrequency="0.01 0.02"
-        numOctaves="3"
-        seed="2"
+        baseFrequency="0.012 0.02"
+        numOctaves="2"
+        seed="3"
+        result="noise"
       >
         <animate
           attributeName="baseFrequency"
-          dur="20s"
+          dur="22s"
           values="
-            0.01 0.02;
-            0.015 0.025;
-            0.01 0.02
+            0.012 0.02;
+            0.016 0.025;
+            0.012 0.02
           "
           repeatCount="indefinite"
         />
@@ -41,7 +42,30 @@
 
       <feDisplacementMap
         in="SourceGraphic"
-        scale="22"
+        in2="noise"
+        scale="20"
+        result="displaced"
+      />
+
+      <!-- SUBTLE DYNAMIC BLUR -->
+      <feGaussianBlur
+        in="displaced"
+        stdDeviation="0.4"
+        result="blurred"
+      >
+        <animate
+          attributeName="stdDeviation"
+          dur="18s"
+          values="0.2; 1.1; 0.3"
+          repeatCount="indefinite"
+        />
+      </feGaussianBlur>
+
+      <!-- Mix sharp + blurred -->
+      <feBlend
+        mode="normal"
+        in="displaced"
+        in2="blurred"
       />
     </filter>
   </defs>
