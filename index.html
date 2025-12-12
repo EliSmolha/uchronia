@@ -1,15 +1,57 @@
-const hitbox = document.querySelector(".title-hitbox");
-const title = document.getElementById("heroTitle");
-const submit = document.getElementById("heroSubmit");
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>УХРОНИЯ</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-if (hitbox && title && submit) {
-  let toggled = false;
+  <!-- Libre Baskerville -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Libre+Baskerville&display=swap">
 
-  hitbox.addEventListener("click", () => {
-    if (window.innerWidth > 768) return;
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
-    toggled = !toggled;
-    title.style.opacity = toggled ? "0" : "1";
-    submit.style.opacity = toggled ? "1" : "0";
-  });
-}
+<section class="hero">
+  <div class="hero-bg"></div>
+
+  <div class="title-hitbox">
+
+    <div class="hero-title" id="heroTitle">
+      УХРОНИЯ
+    </div>
+
+    <div class="hero-submit" id="heroSubmit">
+      ОТПРАВИТЬ РАБОТЫ
+    </div>
+
+  </div>
+</section>
+
+<nav class="nav">
+  <span class="active">О журнале</span>
+  <span class="active">Авторам</span>
+  <span class="disabled">Тексты</span>
+  <span class="disabled">Архив</span>
+</nav>
+
+<main>
+  <section>
+    <h2>О журнале</h2>
+    <p>
+      УХРОНИЯ — арт-литературный журнал,
+      работающий с альтернативными историями,
+      утопиями и классовой памятью.
+    </p>
+    <p>
+      Мы не публикуем контент.
+      Мы оставляем следы.
+    </p>
+  </section>
+</main>
+
+<script src="banner.js"></script>
+</body>
+</html>
