@@ -7,12 +7,12 @@ body {
   margin: 0;
   background: #0b0b0b;
   color: #e6e6e6;
-  font-family: Georgia, "Times New Roman", serif;
 }
 
 /* ===== HERO ===== */
+/* НЕ на весь экран — чтобы манифест выглядывал */
 .hero {
-  height: 100vh;
+  height: 78vh;
 }
 
 .lava-svg {
@@ -28,17 +28,18 @@ body {
 }
 
 .lava-subtitle {
+  font-family: "Oswald", sans-serif;
   font-size: 20px;
-  letter-spacing: 0.25em;
+  letter-spacing: 0.28em;
   fill: #b30000;
-  opacity: 0.85;
+  opacity: 0.9;
 }
 
-/* ===== MANIFEST BLOCK ===== */
+/* ===== MANIFEST ===== */
 .manifest-wrapper {
   display: flex;
   justify-content: center;
-  padding: 6rem 1rem 8rem;
+  padding: 2rem 1rem 8rem;
   background: #0b0b0b;
 }
 
@@ -51,26 +52,29 @@ body {
 /* Inner thin frame */
 .manifest-inner {
   border: 1px solid #f2f2f2;
-  padding: 4rem 3.5rem;
+  padding: 3.5rem 3.2rem;
   background: #0b0b0b;
-  max-width: 800px;
+  max-width: 820px;
 }
 
 /* Title */
 .manifest-title {
   font-family: "Terpsichora";
   font-size: 3rem;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.22em;
   text-align: center;
   margin: 0 0 3rem;
   color: #f2f2f2;
 }
 
-/* Text */
+/* TEXT — PROPAGANDA */
 .manifest-text {
-  color: #8f2a2a; /* тёплый читаемый красный */
-  font-size: 1.05rem;
-  line-height: 1.8;
+  font-family: "Oswald", sans-serif;
+  font-weight: 300;
+  color: #8f2a2a;
+  font-size: 1.15rem;
+  line-height: 1.7;
+  letter-spacing: 0.04em;
 }
 
 .manifest-text p {
@@ -79,17 +83,21 @@ body {
 
 /* ===== MOBILE ===== */
 @media (max-width: 768px) {
+  .hero {
+    height: 70vh;
+  }
+
   .lava-title {
     font-size: 64px;
   }
 
   .lava-subtitle {
     font-size: 14px;
-    letter-spacing: 0.18em;
+    letter-spacing: 0.2em;
   }
 
   .manifest-inner {
-    padding: 2.5rem 1.8rem;
+    padding: 2.2rem 1.6rem;
   }
 
   .manifest-title {
