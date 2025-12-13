@@ -8,6 +8,11 @@ body {
   background: #0b0b0b;
 }
 
+.manifest-text strong {
+  font-weight: 600;     /* не максимально жирный */
+  color: #b43a3a;       /* чуть ярче основного текста */
+}
+
 /* HERO */
 .hero {
   height: 100vh;
