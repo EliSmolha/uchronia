@@ -218,3 +218,54 @@ body {
     font-size: 1.8rem;
   }
 }
+
+/* ===== SUBMISSION GLASS BLOCK ===== */
+
+.submission-glass {
+  margin-top: 4rem;
+  padding: 2.5rem 2.8rem;
+  max-width: 520px;
+  margin-left: auto;
+  margin-right: auto;
+
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+
+  text-align: center;
+}
+
+/* Title */
+.submission-title {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.9rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #f2f2f2;
+  margin-bottom: 1.4rem;
+}
+
+/* Text */
+.submission-text {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: #8f2a2a;
+  margin-bottom: 1rem;
+}
+
+/* Email highlight */
+.submission-email {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 1rem;
+  letter-spacing: 0.12em;
+  color: #f2f2f2;
+  margin: 1.6rem 0;
+}
+
+/* Note */
+.submission-note {
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: #666;
+}
