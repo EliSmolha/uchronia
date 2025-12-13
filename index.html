@@ -105,34 +105,65 @@
   >
     ЛЕВОРАДИКАЛЬНЫЙ ЛИТЕРАТУРНЫЙ ЖУРНАЛ
   </text>
-    <!-- SOFT LIGHT AURA -->
-  <defs>
-    <filter id="softLight">
-      <feGaussianBlur stdDeviation="60" />
-    </filter>
-  </defs>
+    <!-- CANDLE FLAME GLOW -->
+<defs>
+  <filter id="flameBlur">
+    <feGaussianBlur stdDeviation="18" />
+  </filter>
 
+  <filter id="flameNoise">
+    <feTurbulence
+      type="fractalNoise"
+      baseFrequency="0.9"
+      numOctaves="1"
+      seed="8"
+      result="noise">
+      <animate
+        attributeName="baseFrequency"
+        dur="6s"
+        values="0.8;0.95;0.85"
+        repeatCount="indefinite"/>
+    </feTurbulence>
+    <feDisplacementMap
+      in="SourceGraphic"
+      in2="noise"
+      scale="6"
+      xChannelSelector="R"
+      yChannelSelector="G"/>
+  </filter>
+</defs>
+
+<g
+  transform="translate(500 380)"
+  filter="url(#flameNoise)"
+>
   <ellipse
-    cx="50%"
-    cy="75%"
-    rx="180"
-    ry="40"
-    fill="rgba(255, 0, 0, 0.25)"
-    filter="url(#softLight)"
+    cx="0"
+    cy="0"
+    rx="22"
+    ry="38"
+    fill="rgba(179, 0, 0, 0.55)"
+    filter="url(#flameBlur)"
   >
+    <!-- breathing -->
+    <animate
+      attributeName="ry"
+      dur="3.8s"
+      values="34;42;36"
+      repeatCount="indefinite" />
     <animate
       attributeName="rx"
-      dur="18s"
-      values="160; 220; 170"
-      repeatCount="indefinite"
-    />
+      dur="4.6s"
+      values="20;26;21"
+      repeatCount="indefinite" />
     <animate
       attributeName="opacity"
-      dur="14s"
-      values="0.15; 0.35; 0.18"
-      repeatCount="indefinite"
-    />
+      dur="2.9s"
+      values="0.45;0.7;0.5"
+      repeatCount="indefinite" />
   </ellipse>
+</g>
+
 
 
 </svg>
