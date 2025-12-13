@@ -105,6 +105,35 @@
   >
     ЛЕВОРАДИКАЛЬНЫЙ ЛИТЕРАТУРНЫЙ ЖУРНАЛ
   </text>
+    <!-- SOFT LIGHT AURA -->
+  <defs>
+    <filter id="softLight">
+      <feGaussianBlur stdDeviation="60" />
+    </filter>
+  </defs>
+
+  <ellipse
+    cx="50%"
+    cy="75%"
+    rx="180"
+    ry="40"
+    fill="rgba(255, 0, 0, 0.25)"
+    filter="url(#softLight)"
+  >
+    <animate
+      attributeName="rx"
+      dur="18s"
+      values="160; 220; 170"
+      repeatCount="indefinite"
+    />
+    <animate
+      attributeName="opacity"
+      dur="14s"
+      values="0.15; 0.35; 0.18"
+      repeatCount="indefinite"
+    />
+  </ellipse>
+
 
 </svg>
 
