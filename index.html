@@ -105,11 +105,16 @@
   >
     ЛЕВОРАДИКАЛЬНЫЙ ЛИТЕРАТУРНЫЙ ЖУРНАЛ
   </text>
-  <!-- ORGANIC PULSING HEAT -->
-<defs>
-
-  <!-- Living noise -->
-  <filter id="organicPulse" x="-50%" y="-50%" width="200%" height="200%">
+ 
+ <defs>
+  <filter
+    id="organicPulse"
+    filterUnits="userSpaceOnUse"
+    x="-300"
+    y="-300"
+    width="600"
+    height="600"
+  >
     <feTurbulence
       type="fractalNoise"
       baseFrequency="0.018"
@@ -123,7 +128,6 @@
         repeatCount="indefinite" />
     </feTurbulence>
 
-    <!-- Warp the noise -->
     <feDisplacementMap
       in="SourceGraphic"
       in2="noise"
@@ -131,11 +135,10 @@
       xChannelSelector="R"
       yChannelSelector="G" />
 
-    <!-- Blur into nothing -->
     <feGaussianBlur stdDeviation="55" />
   </filter>
-
 </defs>
+
 <!-- RED HEAT FIELD -->
 <g transform="translate(550 460)">
   <rect
@@ -146,7 +149,6 @@
     fill="rgba(179, 0, 0, 0.55)"
     filter="url(#organicPulse)"
   >
-    <!-- Heartbeat -->
     <animate
       attributeName="opacity"
       dur="4.2s"
