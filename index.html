@@ -8,7 +8,15 @@
 </head>
 <body>
 
-<section class="hero">
+<!-- SIDE NAV (floating, scrollspy) -->
+<nav class="side-nav" aria-label="Навигация по странице">
+  <a href="#cover" data-section="cover" class="active">Обложка</a>
+  <a href="#manifest" data-section="manifest">Манифест</a>
+  <a href="#authors" data-section="authors">Авторам</a>
+  <a href="journal.html">Журнал</a>
+</nav>
+
+<section class="hero" id="cover">
 
 <svg
   viewBox="0 0 1000 500"
@@ -103,7 +111,7 @@
 </section>
 
 <!-- MANIFEST -->
-<section class="manifest-wrapper">
+<section class="manifest-wrapper" id="manifest">
 
   <div class="manifest-frame">
     <div class="manifest-inner">
@@ -154,6 +162,23 @@
   </div>
 
 </section>
+
+<!-- AUTHORS (placeholder section for side-nav scrolling) -->
+<section id="authors" class="authors-wrapper" aria-label="Авторам">
+  <div class="authors-frame">
+    <div class="authors-inner">
+      <h2 class="authors-title">АВТОРАМ</h2>
+      <div class="authors-text">
+        <p>
+          Раздел «Авторам» будет здесь. (Пока пустой — чтобы кнопка работала и подсветка разделов не ломалась.)
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Scrollspy -->
+<script src="scrollspy.js"></script>
 
 </body>
 </html>
