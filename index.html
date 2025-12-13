@@ -136,37 +136,36 @@
   </filter>
 
 </defs>
-
 <!-- RED HEAT FIELD -->
-<rect
-  x="420"
-  y="350"
-  width="260"
-  height="220"
-  fill="rgba(179, 0, 0, 0.55)"
-  filter="url(#organicPulse)"
->
-  <!-- Heartbeat -->
-  <animate
-    attributeName="opacity"
-    dur="4.2s"
-    values="0.25;0.6;0.3;0.55;0.28"
-    repeatCount="indefinite" />
+<g transform="translate(550 460)">
+  <rect
+    x="-130"
+    y="-110"
+    width="260"
+    height="220"
+    fill="rgba(179, 0, 0, 0.55)"
+    filter="url(#organicPulse)"
+  >
+    <!-- Heartbeat -->
+    <animate
+      attributeName="opacity"
+      dur="4.2s"
+      values="0.25;0.6;0.3;0.55;0.28"
+      repeatCount="indefinite" />
 
-  <animateTransform
-    attributeName="transform"
-    type="scale"
-    additive="sum"
-    dur="3.6s"
-    values="
-      1 1;
-      1.12 0.95;
-      0.98 1.08;
-      1.05 1;
-      1 1"
-    repeatCount="indefinite" />
-</rect>
-
+    <animateTransform
+      attributeName="transform"
+      type="scale"
+      dur="3.6s"
+      values="
+        1 1;
+        1.12 0.95;
+        0.98 1.08;
+        1.05 1;
+        1 1"
+      repeatCount="indefinite" />
+  </rect>
+</g>
 
 
 </svg>
