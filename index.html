@@ -105,64 +105,67 @@
   >
     ЛЕВОРАДИКАЛЬНЫЙ ЛИТЕРАТУРНЫЙ ЖУРНАЛ
   </text>
-    <!-- CANDLE FLAME GLOW -->
+  <!-- ORGANIC PULSING HEAT -->
 <defs>
-  <filter id="flameBlur">
-    <feGaussianBlur stdDeviation="18" />
-  </filter>
 
-  <filter id="flameNoise">
+  <!-- Living noise -->
+  <filter id="organicPulse" x="-50%" y="-50%" width="200%" height="200%">
     <feTurbulence
       type="fractalNoise"
-      baseFrequency="0.9"
-      numOctaves="1"
-      seed="8"
+      baseFrequency="0.018"
+      numOctaves="2"
+      seed="11"
       result="noise">
       <animate
         attributeName="baseFrequency"
-        dur="6s"
-        values="0.8;0.95;0.85"
-        repeatCount="indefinite"/>
+        dur="9s"
+        values="0.015;0.022;0.017"
+        repeatCount="indefinite" />
     </feTurbulence>
+
+    <!-- Warp the noise -->
     <feDisplacementMap
       in="SourceGraphic"
       in2="noise"
-      scale="6"
+      scale="60"
       xChannelSelector="R"
-      yChannelSelector="G"/>
+      yChannelSelector="G" />
+
+    <!-- Blur into nothing -->
+    <feGaussianBlur stdDeviation="55" />
   </filter>
+
 </defs>
 
-<g
-  transform="translate(500 380)"
-  filter="url(#flameNoise)"
+<!-- RED HEAT FIELD -->
+<rect
+  x="420"
+  y="350"
+  width="160"
+  height="120"
+  fill="rgba(179, 0, 0, 0.55)"
+  filter="url(#organicPulse)"
 >
-  <ellipse
-    cx="0"
-    cy="0"
-    rx="22"
-    ry="38"
-    fill="rgba(179, 0, 0, 0.55)"
-    filter="url(#flameBlur)"
-  >
-    <!-- breathing -->
-    <animate
-      attributeName="ry"
-      dur="3.8s"
-      values="34;42;36"
-      repeatCount="indefinite" />
-    <animate
-      attributeName="rx"
-      dur="4.6s"
-      values="20;26;21"
-      repeatCount="indefinite" />
-    <animate
-      attributeName="opacity"
-      dur="2.9s"
-      values="0.45;0.7;0.5"
-      repeatCount="indefinite" />
-  </ellipse>
-</g>
+  <!-- Heartbeat -->
+  <animate
+    attributeName="opacity"
+    dur="4.2s"
+    values="0.25;0.6;0.3;0.55;0.28"
+    repeatCount="indefinite" />
+
+  <animateTransform
+    attributeName="transform"
+    type="scale"
+    additive="sum"
+    dur="3.6s"
+    values="
+      1 1;
+      1.12 0.95;
+      0.98 1.08;
+      1.05 1;
+      1 1"
+    repeatCount="indefinite" />
+</rect>
 
 
 
