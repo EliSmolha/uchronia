@@ -5,6 +5,9 @@
   <title>УХРОНИЯ — №1 (2026)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
+  <!-- Общие стили сайта (для меню) -->
+  <link rel="stylesheet" href="style.css">
+
   <style>
     :root {
       --bg: #000;
@@ -44,6 +47,7 @@
       opacity: var(--noise-opacity);
       animation: breathe 18s ease-in-out infinite;
       pointer-events: none;
+      z-index: 0;
     }
 
     @keyframes breathe {
@@ -60,6 +64,8 @@
     }
 
     main {
+      position: relative;
+      z-index: 1;
       max-width: 720px;
       padding: 48px 28px;
       text-align: center;
@@ -86,9 +92,30 @@
       color: var(--muted);
     }
 
-    p strong {
+    /* === SUBSCRIPTION BUTTON === */
+    .subscribe {
+      margin-top: 2.4rem;
+    }
+
+    .subscribe a {
+      display: inline-block;
+      padding: 0.7em 1.6em;
+      border: 1px solid #555;
       color: var(--fg);
-      font-weight: normal;
+      text-decoration: none;
+      font-size: 0.9rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      transition:
+        background-color 0.4s ease,
+        color 0.4s ease,
+        border-color 0.4s ease;
+    }
+
+    .subscribe a:hover {
+      background-color: #111;
+      border-color: #888;
+      color: #fff;
     }
 
     /* === ARCHIVAL FOOTNOTE FEEL === */
@@ -104,14 +131,34 @@
 
 <body>
 
+  <!-- SIDE NAV -->
+  <nav class="side-nav" aria-label="Навигация по сайту">
+    <a href="index.html#cover">Обложка</a>
+    <a href="index.html#manifest">Манифест</a>
+    <a href="index.html#authors">Авторам</a>
+    <a href="journal.html" class="active">Ухрония №1 (2026)</a>
+  </nav>
+
+  <!-- MAIN CONTENT -->
   <main aria-label="Редакционная информация">
     <h1>Редакционная коллегия собирает работы</h1>
 
     <p>
-  В целях безопасности и по взаимному согласию участников
-  персональный состав редакционной коллегии на данный момент
-  не публикуется.
+      В целях безопасности и по взаимному согласию участников
+      персональный состав редакционной коллегии на данный момент
+      не публикуется.
     </p>
+
+    <div class="subscribe">
+      <a
+        href="https://forms.gle/ТВОЯ_ССЫЛКА"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Оформить подписку на обновления журнала"
+      >
+        Оформить подписку
+      </a>
+    </div>
 
     <div class="stamp">
       Архив · 2026
