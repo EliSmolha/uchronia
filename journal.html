@@ -8,8 +8,9 @@
   <style>
     :root {
       --bg: #000;
-      --fg: #e6e6e6;
-      --muted: #9a9a9a;
+      --fg: #e8e8e8;
+      --muted: #9b9b9b;
+      --noise-opacity: 0.035;
     }
 
     * {
@@ -24,31 +25,64 @@
       background: var(--bg);
       color: var(--fg);
       font-family: "Times New Roman", Georgia, serif;
+      overflow: hidden;
     }
 
+    /* === BACKGROUND BREATHING NOISE === */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image:
+        repeating-radial-gradient(
+          circle at 30% 40%,
+          rgba(255,255,255,0.03) 0,
+          rgba(255,255,255,0.03) 1px,
+          transparent 1px,
+          transparent 3px
+        );
+      opacity: var(--noise-opacity);
+      animation: breathe 18s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    @keyframes breathe {
+      0%   { opacity: 0.02; }
+      50%  { opacity: 0.05; }
+      100% { opacity: 0.02; }
+    }
+
+    /* === CENTER BLOCK === */
     body {
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
-    .page {
+    main {
       max-width: 720px;
-      padding: 40px 24px;
+      padding: 48px 28px;
       text-align: center;
+      opacity: 0;
+      animation: fadeIn 8s ease forwards;
+      animation-delay: 1.5s;
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; }
     }
 
     h1 {
       font-size: 2rem;
       font-weight: normal;
-      letter-spacing: 0.03em;
-      margin-bottom: 1.5rem;
+      letter-spacing: 0.04em;
+      margin-bottom: 2rem;
     }
 
     p {
       font-size: 1.05rem;
-      line-height: 1.6;
-      margin: 0 0 1rem 0;
+      line-height: 1.7;
+      margin: 0 0 1.2rem 0;
       color: var(--muted);
     }
 
@@ -56,12 +90,21 @@
       color: var(--fg);
       font-weight: normal;
     }
+
+    /* === ARCHIVAL FOOTNOTE FEEL === */
+    .stamp {
+      margin-top: 3rem;
+      font-size: 0.85rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #666;
+    }
   </style>
 </head>
 
 <body>
 
-  <main class="page" aria-label="Редакционная информация">
+  <main aria-label="Редакционная информация">
     <h1>Редакционная коллегия собирает работы</h1>
 
     <p>
@@ -73,6 +116,10 @@
       В ближайшее время мы не раскрываем список участников
       редакционной коллегии из соображений безопасности.
     </p>
+
+    <div class="stamp">
+      Архивный статус · 2026
+    </div>
   </main>
 
 </body>
