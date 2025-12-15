@@ -396,7 +396,6 @@ body {
   /* === FIXED HEADER NAV === */
 .side-nav {
     position: fixed;
-    top: env(safe-area-inset-top);
     left: 0;
     right: 0;
 
