@@ -393,6 +393,10 @@ body {
 /* ===== MOBILE LAYOUT (<= 900px) ===== */
 @media (max-width: 900px) {
 
+    .hero {
+    height: calc(100vh - 70px - env(safe-area-inset-top));
+  }
+
   /* === FIXED HEADER NAV === */
 .side-nav {
     position: fixed;
