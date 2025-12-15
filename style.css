@@ -440,12 +440,12 @@ body {
 /* ===== MOBILE HEADER NAV ===== */
 @media (max-width: 900px) {
 
+  /* === HEADER NAV вместо скрытия === */
   .side-nav {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    bottom: auto;
 
     flex-direction: row;
     justify-content: space-around;
@@ -464,15 +464,57 @@ body {
     letter-spacing: 0.12em;
   }
 
-  /* чтобы якоря не уезжали под хэдер */
   section {
     scroll-margin-top: 70px;
   }
 
-  /* отступ для первого экрана */
   .hero {
     padding-top: 70px;
   }
+
+  /* === HERO TEXT === */
+  .lava-title {
+    font-size: 84px;
+    letter-spacing: 0.18em;
+  }
+
+  .lava-subtitle {
+    font-size: 18px;
+    letter-spacing: 0.28em;
+    opacity: 0.95;
+  }
+
+  /* === CONTENT PADDING === */
+  .manifest-inner,
+  .authors-inner {
+    padding: 2.5rem 1.8rem;
+  }
+
+  .manifest-title {
+    font-size: 2rem;
+  }
+
+  .authors-title {
+    font-size: 1.8rem;
+  }
+
+  /* === READABILITY === */
+  .manifest-text p {
+    line-height: 1.9;
+    margin-bottom: 2rem;
+  }
+
+  .submission-note,
+  .submission-meta {
+    font-size: 0.9rem;
+  }
+
+  .submission-glass {
+    padding: 2.2rem 1.6rem;
+  }
+
+  /* === ORB POSITION === */
+  .lava-orb {
+    transform: translate(500px, 240px) !important;
+  }
 }
-
-
