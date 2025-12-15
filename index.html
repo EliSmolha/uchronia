@@ -281,8 +281,7 @@
         <strong>УХРОНИЯ</strong> символизирует мечту о другом настоящем — не через творческий эскапизм, но через творческое действие. 
         Это мечта о возвращении контроля над условиями существования, мечта о доме и о преобразовании вместо приспособления.
         А еще там природа красивая, в мечте этой. Деревья качаются, листочки, лепесточки, и небо, небо! — синее синего.
-  <div class="submission-section submission-note">
-  </div></p>
+        </p>
       </div>
 
     </div>
@@ -430,40 +429,7 @@
   window.addEventListener("load", updateActiveLink);
 </script>
 
-<!-- Scrollspy -->
-<script>
-  const navLinks = document.querySelectorAll(".side-nav a[data-section]");
-  const sections = Array.from(navLinks).map(link =>
-    document.getElementById(link.dataset.section)
-  );
 
-  function updateActiveLink() {
-    let currentSection = sections[0]; // по умолчанию — обложка
-
-    sections.forEach(section => {
-      if (!section) return;
-
-      const rect = section.getBoundingClientRect();
-
-      if (rect.top <= 120) {
-        currentSection = section;
-      }
-    });
-
-    navLinks.forEach(link => link.classList.remove("active"));
-
-    const activeLink = document.querySelector(
-      `.side-nav a[data-section="${currentSection.id}"]`
-    );
-
-    if (activeLink) {
-      activeLink.classList.add("active");
-    }
-  }
-
-  window.addEventListener("scroll", updateActiveLink);
-  window.addEventListener("load", updateActiveLink);
-</script>
 
 
 </body>
