@@ -311,7 +311,8 @@ body {
   position: fixed;
   top: 22px;
   right: 22px;
-    transform: translateX(-7px);
+    --tg-shift: -7px;
+  transform: translateX(var(--tg-shift));
   width: 48px;
   height: 48px;
   border-radius: 50%;
@@ -342,7 +343,9 @@ body {
     box-shadow 0.35s ease,
     filter 0.35s ease;
 }
-
+.tg-orb:hover {
+  transform: translateX(var(--tg-shift)) scale(1.12);
+}
 /* breathing / organic feel */
 .tg-orb::before {
   content: "";
@@ -360,14 +363,6 @@ body {
   0%   { transform: scale(0.9); opacity: 0.4; }
   50%  { transform: scale(1.05); opacity: 0.75; }
   100% { transform: scale(0.9); opacity: 0.4; }
-}
-
-.tg-orb:hover {
-  transform: scale(1.12);
-  box-shadow:
-    0 0 26px rgba(220, 0, 0, 0.7),
-    inset 0 0 16px rgba(255, 120, 120, 0.45);
-  filter: blur(0);
 }
 
 /* glyph */
