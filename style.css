@@ -393,9 +393,11 @@ body {
 /* ===== MOBILE LAYOUT (<= 900px) ===== */
 @media (max-width: 900px) {
 
-    .hero {
-    height: calc(100vh - 70px - env(safe-area-inset-top));
-  }
+   .hero {
+  min-height: calc(100vh - 70px - env(safe-area-inset-top));
+  padding-top: calc(env(safe-area-inset-top) + 70px);
+  display: block;
+}
 
   /* === FIXED HEADER NAV === */
 .side-nav {
