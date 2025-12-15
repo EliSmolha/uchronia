@@ -190,35 +190,6 @@ body {
   color: #b30000;
 }
 
-/* ===== MOBILE ===== */
-@media (max-width: 900px) {
- 
-  .lava-title {
-    font-size: 84px;
-    letter-spacing: 0.18em;
-  }
-
-  .lava-subtitle {
-    font-size: 18px;
-    letter-spacing: 0.28em;
-    opacity: 0.95;
-  }
-}
-
-
-  .manifest-inner,
-  .authors-inner {
-    padding: 2.5rem 1.8rem;
-  }
-
-  .manifest-title {
-    font-size: 2rem;
-  }
-
-  .authors-title {
-    font-size: 1.8rem;
-  }
-}
 
 /* ===== SUBMISSION GLASS BLOCK ===== */
 
