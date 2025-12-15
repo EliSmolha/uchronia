@@ -394,9 +394,9 @@ body {
 @media (max-width: 900px) {
 
   /* === FIXED HEADER NAV === */
-  .side-nav {
+.side-nav {
     position: fixed;
-    top: 0;
+    top: env(safe-area-inset-top);
     left: 0;
     right: 0;
 
@@ -405,7 +405,11 @@ body {
     justify-content: space-around;
     align-items: center;
 
-    padding: 0.8rem 0.4rem;
+    padding:
+      calc(env(safe-area-inset-top) + 0.6rem)
+      0.4rem
+      0.6rem;
+
     background: rgba(0, 0, 0, 0.85);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
@@ -413,19 +417,13 @@ body {
     z-index: 1200;
   }
 
-  .side-nav a {
-    font-size: 0.65rem;
-    letter-spacing: 0.12em;
-  }
-
-  /* чтобы якоря не уезжали под хэдер */
+  /* корректный offset для якорей */
   section {
-    scroll-margin-top: 70px;
+    scroll-margin-top: calc(env(safe-area-inset-top) + 70px);
   }
 
-  /* отступ под фикс-хэдер на первом экране */
   .hero {
-    padding-top: 70px;
+    padding-top: calc(env(safe-area-inset-top) + 70px);
   }
 
   /* === HERO TEXT === */
