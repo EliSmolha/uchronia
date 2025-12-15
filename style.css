@@ -343,9 +343,15 @@ body {
     box-shadow 0.35s ease,
     filter 0.35s ease;
 }
+
 .tg-orb:hover {
   transform: translateX(var(--tg-shift)) scale(1.12);
+  box-shadow:
+    0 0 26px rgba(220, 0, 0, 0.7),
+    inset 0 0 16px rgba(255, 120, 120, 0.45);
+  filter: blur(0);
 }
+
 /* breathing / organic feel */
 .tg-orb::before {
   content: "";
