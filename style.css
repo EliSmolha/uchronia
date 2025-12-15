@@ -433,5 +433,42 @@ body {
   }
 }
 
+/* ===== MOBILE HEADER NAV ===== */
+@media (max-width: 900px) {
+
+  .side-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: auto;
+
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+
+    padding: 0.8rem 0.4rem;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+
+    z-index: 1200;
+  }
+
+  .side-nav a {
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+  }
+
+  /* чтобы якоря не уезжали под хэдер */
+  section {
+    scroll-margin-top: 70px;
+  }
+
+  /* отступ для первого экрана */
+  .hero {
+    padding-top: 70px;
+  }
+}
 
 
