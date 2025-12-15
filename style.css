@@ -426,11 +426,6 @@ body {
   section {
     scroll-margin-top: calc(env(safe-area-inset-top) + 70px);
   }
-
-  .hero {
-    padding-top: calc(env(safe-area-inset-top) + 70px);
-  }
-
   /* === HERO TEXT === */
   .lava-title {
     font-size: 84px;
