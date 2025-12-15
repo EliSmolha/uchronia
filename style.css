@@ -343,6 +343,7 @@ body {
   position: fixed;
   top: 22px;
   right: 22px;
+    transform: translateX(-7px);
   width: 48px;
   height: 48px;
   border-radius: 50%;
