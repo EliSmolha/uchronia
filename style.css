@@ -192,10 +192,7 @@ body {
 
 /* ===== MOBILE ===== */
 @media (max-width: 900px) {
-  .side-nav {
-    display: none;
-  }
-
+ 
   .lava-title {
     font-size: 84px;
     letter-spacing: 0.18em;
