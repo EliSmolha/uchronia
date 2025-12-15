@@ -2,11 +2,10 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-    <link rel="icon" type="image/png" href="/favicon.png">
+  <link rel="icon" type="image/png" href="/favicon.png">
   <title>УХРОНИЯ — №1 (2026)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- Общие стили сайта (для меню) -->
   <link rel="stylesheet" href="style.css">
 
   <style>
@@ -17,22 +16,17 @@
       --noise-opacity: 0.035;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     html, body {
       margin: 0;
       padding: 0;
       width: 100%;
-      height: 100%;
       background: var(--bg);
       color: var(--fg);
       font-family: "Times New Roman", Georgia, serif;
-      overflow: hidden;
     }
 
-    /* === BACKGROUND BREATHING NOISE === */
     body::before {
       content: "";
       position: fixed;
@@ -52,16 +46,16 @@
     }
 
     @keyframes breathe {
-      0%   { opacity: 0.02; }
-      50%  { opacity: 0.05; }
+      0% { opacity: 0.02; }
+      50% { opacity: 0.05; }
       100% { opacity: 0.02; }
     }
 
-    /* === CENTER BLOCK === */
     body {
       display: flex;
       align-items: center;
       justify-content: center;
+      min-height: 100vh;
     }
 
     main {
@@ -75,13 +69,10 @@
       animation-delay: 1.5s;
     }
 
-    @keyframes fadeIn {
-      to { opacity: 1; }
-    }
+    @keyframes fadeIn { to { opacity: 1; } }
 
     h1 {
       font-size: 2rem;
-      font-weight: normal;
       letter-spacing: 0.04em;
       margin-bottom: 2rem;
     }
@@ -89,37 +80,22 @@
     p {
       font-size: 1.05rem;
       line-height: 1.7;
-      margin: 0 0 1.2rem 0;
+      margin-bottom: 1.4rem;
       color: var(--muted);
     }
 
-    /* === SUBSCRIPTION BUTTON === */
-    .subscribe {
-      margin-top: 2.4rem;
-    }
-
     .subscribe a {
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
       padding: 0.7em 1.6em;
       border: 1px solid #555;
       color: var(--fg);
       text-decoration: none;
-      font-size: 0.9rem;
       letter-spacing: 0.18em;
       text-transform: uppercase;
-      transition:
-        background-color 0.4s ease,
-        color 0.4s ease,
-        border-color 0.4s ease;
     }
 
-    .subscribe a:hover {
-      background-color: #111;
-      border-color: #888;
-      color: #fff;
-    }
-
-    /* === ARCHIVAL FOOTNOTE FEEL === */
     .stamp {
       margin-top: 3rem;
       font-size: 0.85rem;
@@ -127,44 +103,58 @@
       text-transform: uppercase;
       color: #666;
     }
+
+    /*MOBILE FIXES*/
+    @media (max-width: 900px) {
+      html, body {
+        overflow: auto;
+      }
+
+      body {
+        display: block;
+      }
+
+      main {
+        margin: 4rem auto;
+        padding: 2.5rem 1.8rem;
+        text-align: left;
+      }
+
+      p {
+        font-size: 1rem;
+        line-height: 1.9;
+      }
+    }
   </style>
 </head>
 
 <body>
 
-  <!-- SIDE NAV -->
-  <nav class="side-nav" aria-label="Навигация по сайту">
-    <a href="index.html#cover">Обложка</a>
-    <a href="index.html#manifest">Манифест</a>
-    <a href="index.html#authors">Авторам</a>
-    <a href="journal.html" class="active">Ухрония №1 (2026)</a>
-  </nav>
+<nav class="side-nav" aria-label="Навигация по сайту">
+  <a href="index.html#cover">Обложка</a>
+  <a href="index.html#manifest">Манифест</a>
+  <a href="index.html#authors">Авторам</a>
+  <a href="journal.html" class="active">Ухрония №1 (2026)</a>
+</nav>
 
-  <!-- MAIN CONTENT -->
-  <main aria-label="Редакционная информация">
-    <h1>Редакционная коллегия собирает работы</h1>
+<main>
+  <h1>Редакционная коллегия собирает работы</h1>
 
-    <p>
-      В целях безопасности и по взаимному согласию участников
-      персональный состав редакционной коллегии на данный момент
-      не публикуется.
-    </p>
+  <p>
+    В целях безопасности и по взаимному согласию участников
+    персональный состав редакционной коллегии на данный момент
+    не публикуется.
+  </p>
 
-    <div class="subscribe">
-      <a
-        href="https://docs.google.com/forms/d/e/1FAIpQLSdsJHcbAN0zUU6ROiRp3_vU1qp_Eebua1jQPNMiH3s_iBEnMw/viewform?usp=publish-editor"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Оформить подписку на обновления журнала"
-      >
-        Оформить подписку
-      </a>
-    </div>
+  <div class="subscribe">
+    <a href="https://docs.google.com/forms/d/e/1FAIpQLSdsJHcbAN0zUU6ROiRp3_vU1qp_Eebua1jQPNMiH3s_iBEnMw/viewform?usp=publish-editor"
+       target="_blank" rel="noopener noreferrer">
+      Оформить подписку
+    </a>
+  </div>
 
-    <div class="stamp">
-      Архив · 2026
-    </div>
-  </main>
+  <div class="stamp">Архив · 2026</div>
+</main>
 
 </body>
 </html>
