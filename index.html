@@ -8,22 +8,16 @@
   <link rel="stylesheet" href="style.css">
 </head>
 
-
 <body>
 
-    <a
+<a
   href="https://t.me/+-imjCqE85uo0ZmMy"
   class="tg-orb"
   target="_blank"
   aria-label="Telegram УХРОНИЯ"
 >
-<img
-  src="telegram.png"
-  alt="Telegram"
-  class="tg-icon"
-/>
+  <img src="telegram.png" alt="Telegram" class="tg-icon">
 </a>
-
 
 <nav class="side-nav" aria-label="Навигация по странице">
   <a href="#cover" data-section="cover" class="active">Обложка</a>
@@ -409,6 +403,32 @@
     </div>
   </div>
 </section>
+
+  <script>
+  const navLinks = document.querySelectorAll(".side-nav a[data-section]");
+  const sections = Array.from(navLinks).map(link =>
+    document.getElementById(link.dataset.section)
+  );
+
+  function updateActiveLink() {
+    let currentSection = sections[0];
+    sections.forEach(section => {
+      if (!section) return;
+      if (section.getBoundingClientRect().top <= 120) {
+        currentSection = section;
+      }
+    });
+
+    navLinks.forEach(link => link.classList.remove("active"));
+    const activeLink = document.querySelector(
+      `.side-nav a[data-section="${currentSection.id}"]`
+    );
+    if (activeLink) activeLink.classList.add("active");
+  }
+
+  window.addEventListener("scroll", updateActiveLink);
+  window.addEventListener("load", updateActiveLink);
+</script>
 
 <!-- Scrollspy -->
 <script>
