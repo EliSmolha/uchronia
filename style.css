@@ -415,4 +415,23 @@ body {
   pointer-events: none;
 }
 
+/* ===== MOBILE SAFETY OVERRIDES ===== */
+@media (max-width: 900px) {
+
+  .manifest-text p {
+    line-height: 1.9;
+    margin-bottom: 2rem;
+  }
+
+  .submission-note,
+  .submission-meta {
+    font-size: 0.9rem;
+  }
+
+  .submission-glass {
+    padding: 2.2rem 1.6rem;
+  }
+}
+
+
 
