@@ -434,17 +434,17 @@ body {
     padding: 2.2rem 1.6rem;
   }
 }
-
-/* ===== MOBILE HEADER NAV ===== */
+/* ===== MOBILE LAYOUT (<= 900px) ===== */
 @media (max-width: 900px) {
 
-  /* === HEADER NAV вместо скрытия === */
+  /* === FIXED HEADER NAV === */
   .side-nav {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
 
+    display: flex;
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
@@ -462,10 +462,12 @@ body {
     letter-spacing: 0.12em;
   }
 
+  /* чтобы якоря не уезжали под хэдер */
   section {
     scroll-margin-top: 70px;
   }
 
+  /* отступ под фикс-хэдер на первом экране */
   .hero {
     padding-top: 70px;
   }
@@ -511,8 +513,9 @@ body {
     padding: 2.2rem 1.6rem;
   }
 
-  /* === ORB POSITION === */
+  /* === ORB POSITION (behind title) === */
   .lava-orb {
     transform: translate(500px, 240px) !important;
   }
 }
+
