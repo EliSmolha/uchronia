@@ -406,3 +406,12 @@ body {
   user-select: none;
 }
 
+.tg-icon {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  opacity: 0.92;
+  pointer-events: none;
+}
+
+
