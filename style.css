@@ -397,9 +397,13 @@ body {
 .hero {
   min-height: calc(100vh - 70px - env(safe-area-inset-top));
   display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  padding-bottom: 10vh;
+}
+
+.lava-svg {
+  margin-top: auto;
+  margin-bottom: 10vh;
+}
+
 }
 
 
