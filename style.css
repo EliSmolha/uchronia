@@ -16,13 +16,12 @@ body {
   color: #b43a3a;
 }
 
-/* ===== HERO Катя, исправь, пожалуйста ===== */
+/* ===== HERO Катя, исправь мобилку, пожалуйста ===== */
 .hero {
   height: 100vh;
   display: flex;
-  align-items: flex-end;  
+  align-items: center;
   justify-content: center;
-  padding-bottom: 6vh;     
 }
 
 
@@ -395,11 +394,14 @@ body {
 /* ===== MOBILE LAYOUT (<= 900px) ===== */
 @media (max-width: 900px) {
 
-   .hero {
+.hero {
   min-height: calc(100vh - 70px - env(safe-area-inset-top));
-  padding-top: calc(env(safe-area-inset-top) + 70px);
-  display: block;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 10vh;
 }
+
 
   /* === FIXED HEADER NAV === */
 .side-nav {
