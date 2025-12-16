@@ -20,9 +20,11 @@ body {
 .hero {
   height: 100vh;
   display: flex;
-  align-items: center;
+  align-items: flex-end;   /* ↓ ПРИКРЕПЛЯЕМ К НИЗУ */
   justify-content: center;
+  padding-bottom: 6vh;     /* ← регулируешь “дыхание” от низа */
 }
+
 
 /* SVG */
 .lava-svg {
