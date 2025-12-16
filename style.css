@@ -393,21 +393,21 @@ body {
 /* ===== MOBILE LAYOUT (<= 900px) ===== */
 @media (max-width: 900px) {
 
-   .hero {
-  min-height: calc(100vh - 70px - env(safe-area-inset-top));
-  padding-top: calc(env(safe-area-inset-top) + 70px);
-  display: block;
-}
+  .hero {
+    min-height: calc(100vh - 70px - env(safe-area-inset-top));
+    padding-top: calc(env(safe-area-inset-top) + 70px);
+    display: block;
+  }
 
-  /* === FIXED HEADER NAV === */
+  /* === FIXED HEADER NAV (BOTTOM) === */
   .side-nav {
     position: fixed;
-    top: auto;                 /* ← ВАЖНО */
+    top: auto;
     left: 0;
     right: 0;
-    bottom: 0;                 /* ← ПРИКРЕПИЛИ К НИЗУ */
+    bottom: 0;
 
-    transform: none;           /* ← УБИРАЕМ translateY(-50%) */
+    transform: none;
 
     display: flex;
     flex-direction: row;
@@ -435,7 +435,6 @@ body {
   section {
     scroll-margin-bottom: calc(70px + env(safe-area-inset-bottom));
   }
-}
 
   /* === HERO TEXT === */
   .lava-title {
@@ -483,7 +482,8 @@ body {
     transform: translate(500px, 240px) !important;
   }
 
-    .lava-svg {
+  .lava-svg {
     transform: translateY(-80px);
   }
 }
+
