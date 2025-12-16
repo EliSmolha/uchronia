@@ -16,13 +16,13 @@ body {
   color: #b43a3a;
 }
 
-/* ===== HERO ===== */
+/* ===== HERO Катя, исправь, пожалуйста ===== */
 .hero {
   height: 100vh;
   display: flex;
-  align-items: flex-end;   /* ↓ ПРИКРЕПЛЯЕМ К НИЗУ */
+  align-items: flex-end;  
   justify-content: center;
-  padding-bottom: 6vh;     /* ← регулируешь “дыхание” от низа */
+  padding-bottom: 6vh;     
 }
 
 
