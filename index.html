@@ -150,29 +150,27 @@
 </defs>
 
 
-<g class="lava-orb" transform="translate(470 460)">
-<circle cx="0" cy="0" r="180" fill="rgba(179, 0, 0, 0.55)" filter="url(#organicPulse)" />
+<circle
+  cx="500"
+  cy="250"
+  r="180"
+  fill="rgba(179, 0, 0, 0.55)"
+  filter="url(#organicPulse)"
+>
+  <animate
+    attributeName="opacity"
+    dur="4.2s"
+    values="0.22;0.6;0.25;0.55;0.24"
+    repeatCount="indefinite" />
 
-
-    <animate
-      attributeName="opacity"
-      dur="4.2s"
-      values="0.22;0.6;0.25;0.55;0.24"
-      repeatCount="indefinite" />
-
-    <animateTransform
-      attributeName="transform"
-      type="scale"
-      dur="3.6s"
-      values="
-        1 1;
-        1.12 0.95;
-        0.98 1.08;
-        1.05 1;
-        1 1"
-      repeatCount="indefinite" />
-  </rect>
-</g>
+  <animateTransform
+    attributeName="transform"
+    type="scale"
+    additive="sum"
+    dur="3.6s"
+    values="1;1.12;0.98;1.05;1"
+    repeatCount="indefinite" />
+</circle>
 
 
 </svg>
