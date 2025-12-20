@@ -113,63 +113,6 @@
     ЛЕВЫЙ ЛИТЕРАТУРНЫЙ ЖУРНАЛ
   </text>
  
- <defs>
-  <filter
-    id="organicPulse"
-    filterUnits="userSpaceOnUse"
-    x="-2000"
-    y="-2000"
-    width="4000"
-    height="4000"
-  >
-    <feTurbulence
-      type="fractalNoise"
-      baseFrequency="0.018"
-      numOctaves="2"
-      seed="11"
-      result="noise">
-      <animate
-        attributeName="baseFrequency"
-        dur="9s"
-        values="0.015;0.022;0.017"
-        repeatCount="indefinite" />
-    </feTurbulence>
-
-    <feDisplacementMap
-      in="SourceGraphic"
-      in2="noise"
-      scale="60"
-      xChannelSelector="R"
-      yChannelSelector="G" />
-
-    <feGaussianBlur stdDeviation="70" />
-  </filter>
-</defs>
-
-
-<circle
-  cx="500"
-  cy="250"
-  r="180"
-  fill="rgba(179, 0, 0, 0.55)"
-  filter="url(#organicPulse)"
->
-  <animate
-    attributeName="opacity"
-    dur="4.2s"
-    values="0.22;0.6;0.25;0.55;0.24"
-    repeatCount="indefinite" />
-
-  <animateTransform
-    attributeName="transform"
-    type="scale"
-    additive="sum"
-    dur="3.6s"
-    values="1;1.12;0.98;1.05;1"
-    repeatCount="indefinite" />
-</circle>
-
-
 </svg>
 
 </section>
