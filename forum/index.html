@@ -93,11 +93,25 @@
     userBox.style.display = "none";
   }
 
-  function renderUser(user) {
-    loginBox.style.display = "none";
-    userBox.style.display = "flex";
-    userStatus.textContent = user.email;
-  }
+async function renderUser(user) {
+  loginBox.style.display = "none";
+  userBox.style.display = "flex";
+
+  // пробуем получить профиль
+  const { data } = await supabase
+    .from("profiles")
+    .select("display_name, username")
+    .eq("id", user.id)
+    .single();
+
+  const nick =
+    data?.display_name ||
+    data?.username ||
+    user.email.split("@")[0];
+
+  userStatus.textContent = `Однажды печаль пройдёт, ${nick}`;
+}
+
 
   renderGuest();
 
