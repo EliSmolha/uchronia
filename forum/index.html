@@ -5,180 +5,84 @@
   <title>УХРОНИЯ — Форум</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <style>
-    body {
-      margin: 0;
-      background: #0b0b0b;
-      color: #e6e6e6;
-      font-family: Georgia, "Times New Roman", serif;
-    }
+  <link rel="stylesheet" href="/style.css"><!-- твой основной стиль -->
+  <link rel="stylesheet" href="/forum/forum.css"><!-- позже вынесем -->
 
-    .wrap {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 3rem 1.5rem 6rem;
-    }
-
-    h1 {
-      text-align: center;
-      letter-spacing: 0.25em;
-      font-weight: normal;
-      margin-bottom: 3rem;
-    }
-
-    .topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 2rem;
-      font-size: 0.9rem;
-    }
-
-    .card {
-      border: 1px solid rgba(255,255,255,0.2);
-      padding: 1.4rem;
-      margin-bottom: 1.5rem;
-      background: rgba(255,255,255,0.03);
-    }
-
-    input, textarea, button {
-      width: 100%;
-      box-sizing: border-box;
-      padding: 0.8rem;
-      margin-top: 0.6rem;
-      background: #111;
-      color: #e6e6e6;
-      border: 1px solid rgba(255,255,255,0.3);
-      font-family: inherit;
-    }
-
-    textarea { min-height: 140px; }
-
-    button {
-      cursor: pointer;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-    }
-
-    .muted {
-      color: #777;
-      font-size: 0.85rem;
-    }
-
-    .thread-title {
-      font-size: 1.2rem;
-      margin: 0 0 0.4rem;
-    }
-
-    a {
-      color: #f2f2f2;
-      text-decoration: none;
-    }
-
-    a:hover { text-decoration: underline; }
-  </style>
 </head>
 
 <body>
-  <div class="wrap">
-    <h1>ФОРУМ</h1>
 
-    <div class="topbar">
-      <div id="userStatus" class="muted"></div>
-      <button id="logout">Выйти</button>
+<!-- === SIDE NAV (ТОТ ЖЕ, ЧТО НА САЙТЕ) === -->
+<nav class="side-nav">
+  <a href="/">Обложка</a>
+  <a href="/#manifest">Манифест</a>
+  <a href="/#authors">Авторам</a>
+  <a href="/forum/" class="active">Форум</a>
+</nav>
+
+<main class="wrap">
+
+  <h1 class="forum-title">ФОРУМ</h1>
+
+  <!-- === TOP BAR === -->
+  <div class="forum-topbar">
+    <div id="userStatus" class="muted"></div>
+    <div class="forum-actions">
+      <a href="profile.html" class="btn">Профиль</a>
+      <button id="logout" class="btn">Выйти</button>
     </div>
-
-    <!-- Создание темы -->
-    <div class="card" id="newThread">
-      <strong>Новая тема</strong>
-      <input id="title" placeholder="Заголовок">
-      <textarea id="body" placeholder="Текст (markdown)"></textarea>
-      <button id="create">Опубликовать</button>
-    </div>
-
-    <!-- Список тем -->
-    <div id="threads"></div>
   </div>
 
+  <!-- === SECTIONS === -->
+  <section class="forum-sections">
+
+    <a class="forum-section" href="section.html?type=festivals">
+      <h2>ЛИТЕРАТУРНЫЕ ФЕСТИВАЛИ</h2>
+      <p>Коллективные конкурсы, номера, дедлайны, жюри.</p>
+    </a>
+
+    <a class="forum-section" href="section.html?type=duels">
+      <h2>ЛИТЕРАТУРНЫЕ ДУЭЛИ</h2>
+      <p>Парные столкновения текстов, анонимные или открытые.</p>
+    </a>
+
+    <a class="forum-section" href="section.html?type=flood">
+      <h2>ФЛУДИЛКА</h2>
+      <p>Разговоры, мета, обсуждение процесса и жизни.</p>
+    </a>
+
+    <a class="forum-section" href="section.html?type=rules">
+      <h2>ПРАВИЛА ФОРУМА</h2>
+      <p>Модерация, этика, принципы сообщества.</p>
+    </a>
+
+  </section>
+
+</main>
+
 <script type="module">
-  import { supabase, currentUser, signOut } from "./forum.js";
+  import { supabase, signOut } from "./forum.js";
 
   const userStatus = document.getElementById("userStatus");
-  const threadsBox = document.getElementById("threads");
-  const newThreadBox = document.getElementById("newThread");
   const logoutBtn = document.getElementById("logout");
 
   function renderLoggedOut() {
     userStatus.textContent = "Войдите, чтобы участвовать в форуме";
-    newThreadBox.style.display = "none";
     logoutBtn.style.display = "none";
   }
 
   function renderLoggedIn(user) {
     userStatus.textContent = "Вы вошли как: " + user.email;
-    newThreadBox.style.display = "block";
     logoutBtn.style.display = "inline-block";
-    loadThreads();
   }
 
-  async function loadThreads() {
-    const { data, error } = await supabase
-      .from("threads")
-      .select("id, title, created_at")
-      .order("created_at", { ascending: false });
-
-    if (error) {
-      threadsBox.textContent = error.message;
-      return;
-    }
-
-    threadsBox.innerHTML = data.map(t => `
-      <div class="card">
-        <a class="thread-title" href="thread.html?id=${t.id}">
-          ${t.title}
-        </a>
-        <div class="muted">
-          ${new Date(t.created_at).toLocaleString()}
-        </div>
-      </div>
-    `).join("");
-  }
-
-  // --- СОСТОЯНИЕ ПРИ ЗАГРУЗКЕ ---
-  renderLoggedOut();
-
-  // --- СЛУШАЕМ AUTH ---
-  supabase.auth.onAuthStateChange((event, session) => {
+  supabase.auth.onAuthStateChange((_, session) => {
     if (session?.user) {
       renderLoggedIn(session.user);
     } else {
       renderLoggedOut();
     }
   });
-
-  // --- СОЗДАНИЕ ТЕМЫ ---
-  document.getElementById("create").onclick = async () => {
-    const user = (await currentUser());
-    if (!user) return;
-
-    const title = document.getElementById("title").value.trim();
-    const body = document.getElementById("body").value.trim();
-    if (!title || !body) return;
-
-    const { error } = await supabase
-      .from("threads")
-      .insert({
-        title,
-        body_md: body,
-        author_id: user.id
-      });
-
-    if (!error) {
-      document.getElementById("title").value = "";
-      document.getElementById("body").value = "";
-      loadThreads();
-    }
-  };
 
   logoutBtn.onclick = async () => {
     await signOut();
