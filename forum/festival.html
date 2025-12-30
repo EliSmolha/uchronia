@@ -11,13 +11,13 @@
 
 <body>
 
-<!-- === PARTICLES BACKGROUND (общий для форума) === -->
+<!-- === GLOBAL BACKGROUND (для всех страниц форума) === -->
 <div id="particles-bg"></div>
 
 <!-- === FORUM NAV === -->
 <nav class="forum-nav" aria-label="Навигация форума">
   <a href="/" class="nav-root">ЖУРНАЛ</a>
-    <a href="/forum/index.html">ЗАГЛАВИЕ</a>
+  <a href="/forum/index.html">ЗАГЛАВИЕ</a>
   <a href="/forum/festival.html">ФЕСТИВАЛЬ</a>
   <a href="/forum/section.html?type=duels">ДУЭЛИ</a>
   <a href="/forum/section.html?type=flood">ФЛУДИЛИЩЕ</a>
@@ -26,60 +26,61 @@
 
 <main class="forum-main">
 
-  <!-- === TITLE === -->
-  <h1 class="festival-title">НЕ|БЫЛЬ–2026</h1>
+  <!-- === FESTIVAL TITLE === -->
+  <header class="festival-header">
+    <h1 class="festival-title">НЕ|БЫЛЬ–2026</h1>
+  </header>
 
-  <!-- === COUNTDOWN === -->
+  <!-- === DEADLINE === -->
   <section class="festival-deadline glass">
-  <div class="deadline-label">До окончания приёма работ</div>
+    <div class="deadline-label">До окончания приёма работ</div>
 
-  <div class="deadline-grid">
-    <div class="deadline-cell">
-      <b id="days">000</b>
-      <span>дней</span>
+    <div class="deadline-grid">
+      <div class="deadline-cell">
+        <b id="days">000</b>
+        <span>дней</span>
+      </div>
+      <div class="deadline-cell">
+        <b id="hours">00</b>
+        <span>часов</span>
+      </div>
+      <div class="deadline-cell">
+        <b id="minutes">00</b>
+        <span>минут</span>
+      </div>
+      <div class="deadline-cell">
+        <b id="seconds">00</b>
+        <span>секунд</span>
+      </div>
     </div>
-    <div class="deadline-cell">
-      <b id="hours">00</b>
-      <span>часов</span>
-    </div>
-    <div class="deadline-cell">
-      <b id="minutes">00</b>
-      <span>минут</span>
-    </div>
-    <div class="deadline-cell">
-      <b id="seconds">00</b>
-      <span>секунд</span>
-    </div>
-  </div>
-</section>
+  </section>
 
-<section class="festival-text">
-  <p class="festival-lead">
-    <strong>НЕ|БЫЛЬ–2026</strong> — литературный фестиваль научной фантастики и фэнтези,
-    первый конкурс на площадке «УХРОНИЯ».
-  </p>
+  <!-- === FESTIVAL TEXT === -->
+  <section class="festival-text">
+    <p class="festival-lead">
+      <strong>НЕ|БЫЛЬ–2026</strong> — литературный фестиваль научной фантастики и фэнтези,
+      первый конкурс на площадке «УХРОНИЯ».
+    </p>
 
-  <p>
-    Мы принимаем тексты объёмом до 50 000 знаков (без пробелов).
-    В работе должен присутствовать сюжетно значимый фантастический элемент.
-    К участию допускаются также интерактивные форматы
-    (лит-РПГ, визуальные новеллы).
-  </p>
+    <p>
+      Мы принимаем тексты объёмом до 50 000 знаков (без пробелов).
+      В работе должен присутствовать сюжетно значимый фантастический элемент.
+      Допускаются также интерактивные форматы
+      (лит-РПГ, визуальные новеллы).
+    </p>
 
-  <p>
-    Срок приёма работ — <strong>до 1 июня 2026 года</strong>.
-  </p>
+    <p>
+      Срок приёма работ — <strong>до 1 июня 2026 года</strong>.
+    </p>
 
-  <p class="festival-note">
-    Основная цель фестиваля — построение сообщества,
-    поддержка и рост авторов разных уровней.
-  </p>
-</section>
-
+    <p class="festival-note">
+      Основная цель фестиваля — построение сообщества и поддержка авторов разных уровней.
+    </p>
+  </section>
 
   <!-- === PINNED === -->
   <section class="festival-pinned">
-    <h2>ЗАКРЕПЛЁННЫЕ ТЕМЫ</h2>
+    <h2 class="section-title">ЗАКРЕПЛЁННЫЕ ТЕМЫ</h2>
 
     <div class="forum-grid">
       <div class="forum-tile glass muted">
@@ -96,11 +97,11 @@
 
   <!-- === SUBMISSIONS === -->
   <section class="festival-submissions">
-    <h2>КОНКУРСНЫЕ РАБОТЫ</h2>
+    <h2 class="section-title">КОНКУРСНЫЕ РАБОТЫ</h2>
 
     <div class="forum-grid">
       <div class="forum-tile glass muted">
-        <p>Работы появятся здесь 10-го июня 2026 года.</p>
+        <p>Работы появятся здесь после начала приёма.</p>
       </div>
     </div>
   </section>
@@ -111,30 +112,30 @@
 <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
 <script>
 particlesJS("particles-bg", {
-  "particles": {
-    "number": { "value": 260, "density": { "enable": true, "value_area": 900 }},
-    "color": { "value": "#ffffff" },
-    "shape": { "type": "circle" },
-    "opacity": { "value": 0.4, "random": true },
-    "size": { "value": 4, "random": true },
-    "line_linked": { "enable": false },
-    "move": {
-      "enable": true,
-      "speed": 0.6,
-      "direction": "bottom",
-      "out_mode": "out"
+  particles: {
+    number: { value: 260, density: { enable: true, value_area: 900 } },
+    color: { value: "#ffffff" },
+    shape: { type: "circle" },
+    opacity: { value: 0.35, random: true },
+    size: { value: 3, random: true },
+    line_linked: { enable: false },
+    move: {
+      enable: true,
+      speed: 0.6,
+      direction: "bottom",
+      out_mode: "out"
     }
   },
-  "interactivity": {
-    "events": {
-      "onhover": { "enable": true, "mode": "repulse" },
-      "resize": true
+  interactivity: {
+    events: {
+      onhover: { enable: true, mode: "repulse" },
+      resize: true
     },
-    "modes": {
-      "repulse": { "distance": 120, "duration": 0.4 }
+    modes: {
+      repulse: { distance: 120, duration: 0.4 }
     }
   },
-  "retina_detect": true
+  retina_detect: true
 });
 </script>
 
@@ -144,18 +145,17 @@ const deadline = new Date("2026-06-01T23:59:59Z").getTime();
 
 function updateCountdown() {
   const now = Date.now();
-  let diff = deadline - now;
-  if (diff < 0) diff = 0;
+  let diff = Math.max(0, deadline - now);
 
-  const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-  const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
-  const m = Math.floor((diff / (1000 * 60)) % 60);
+  const d = Math.floor(diff / 86400000);
+  const h = Math.floor((diff / 3600000) % 24);
+  const m = Math.floor((diff / 60000) % 60);
   const s = Math.floor((diff / 1000) % 60);
 
-  days.textContent = d.toString().padStart(2, "0");
-  hours.textContent = h.toString().padStart(2, "0");
-  minutes.textContent = m.toString().padStart(2, "0");
-  seconds.textContent = s.toString().padStart(2, "0");
+  days.textContent = String(d).padStart(3, "0");
+  hours.textContent = String(h).padStart(2, "0");
+  minutes.textContent = String(m).padStart(2, "0");
+  seconds.textContent = String(s).padStart(2, "0");
 }
 
 updateCountdown();
