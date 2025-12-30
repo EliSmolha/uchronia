@@ -1,10 +1,53 @@
 /* =========================================================
+   BASE
+   ========================================================= */
+
+body {
+  margin: 0;
+  background: #0b0b0b;
+  color: #e6e6e6;
+  overflow-x: hidden;
+}
+
+/* =========================================================
+   PARTICLES BACKGROUND
+   ========================================================= */
+
+#particles-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+
+  /* тёмно-чёрный → тёплый тёмно-оранжевый */
+  background: linear-gradient(
+    135deg,
+    #0b0b0b 0%,
+    #140c08 30%,
+    #2b140c 65%,
+    #120a07 100%
+  );
+}
+
+#particles-bg canvas {
+  position: absolute;
+  inset: 0;
+}
+
+/* контент всегда поверх */
+.forum-nav,
+.forum-main {
+  position: relative;
+  z-index: 1;
+}
+
+/* =========================================================
    FORUM LAYOUT
    ========================================================= */
 
 .forum-main {
   max-width: 1200px;
-  margin-left: calc(180px + 3rem); /* навигация + воздух */
+  margin-left: calc(180px + 3rem);
   padding: 4rem 3rem 6rem;
 }
 
@@ -90,7 +133,10 @@
   border: 1px solid rgba(255, 255, 255, 0.25);
   color: #e6e6e6;
   cursor: pointer;
-  transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+  transition:
+    background 0.25s ease,
+    border-color 0.25s ease,
+    color 0.25s ease;
 }
 
 .btn:hover {
@@ -124,7 +170,9 @@
   padding: 2.6rem 2.8rem;
   color: #e6e6e6;
   text-decoration: none;
-  transition: transform 0.35s ease, border-color 0.35s ease;
+  transition:
+    transform 0.35s ease,
+    border-color 0.35s ease;
 }
 
 .forum-tile:hover {
@@ -149,7 +197,7 @@
   font-size: 2rem;
   letter-spacing: 0.25em;
   margin-bottom: 1rem;
-  color: #b43a3a; /* спокойный красный УХРОНИИ */
+  color: #b43a3a;
 }
 
 /* =========================================================
@@ -183,17 +231,6 @@
   color: #b43a3a;
 }
 
-.festival-countdown {
-  text-align: center;
-  font-size: 1.1rem;
-  margin-bottom: 3rem;
-}
-
-.festival-countdown .label {
-  color: #777;
-  margin-right: 0.5rem;
-}
-
 .festival-description p {
   line-height: 1.9;
   margin-bottom: 1.2rem;
@@ -210,62 +247,6 @@
   font-size: 1.2rem;
   margin-bottom: 1.5rem;
 }
-
-/* =========================================================
-   PARTICLES BACKGROUND
-   ========================================================= */
-
-#particles-bg {
-  position: fixed;
-  inset: 0;
-  z-index: -2;
-  pointer-events: none;
-
-  /* градиент ПОД частицами */
-  background: linear-gradient(
-    135deg,
-    #0b0b0b 0%,
-    #1a0f0b 35%,
-    #2b140c 65%,
-    #120a07 100%
-  );
-}
-
-/* canvas, который создаёт particles.js */
-#particles-bg canvas {
-  position: absolute;
-  inset: 0;
-}
-
-
-/* =========================================================
-   MOBILE
-   ========================================================= */
-
-@media (max-width: 900px) {
-
-  .forum-nav {
-    position: static;
-    width: auto;
-    display: flex;
-    gap: 1.2rem;
-    margin-bottom: 2rem;
-  }
-
-  .forum-main {
-    margin-left: 0;
-    padding: 2.5rem 1.5rem 4rem;
-  }
-
-  .forum-title {
-    letter-spacing: 0.28em;
-  }
-
-  .forum-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
 
 /* =========================================================
    HOURGLASS
@@ -300,7 +281,7 @@
 }
 
 .hourglass::before { top: 0; }
-.hourglass::after { bottom: 0; }
+.hourglass::after  { bottom: 0; }
 
 .sand {
   position: absolute;
@@ -345,10 +326,37 @@
   color: #e6e6e6;
   letter-spacing: 0.1em;
   margin-bottom: 0.2rem;
-  transition: transform 0.2s ease;
 }
 
 .countdown-numbers span {
   text-align: center;
   color: #777;
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+  .forum-nav {
+    position: static;
+    width: auto;
+    display: flex;
+    gap: 1.2rem;
+    margin-bottom: 2rem;
+  }
+
+  .forum-main {
+    margin-left: 0;
+    padding: 2.5rem 1.5rem 4rem;
+  }
+
+  .forum-title {
+    letter-spacing: 0.28em;
+  }
+
+  .forum-grid {
+    grid-template-columns: 1fr;
+  }
 }
