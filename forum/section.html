@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>УХРОНИЯ — Раздел форума</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/forum/forum.css">
+</head>
+
+<body>
+
+<!-- SIDE NAV -->
+<nav class="side-nav">
+  <a href="/">Обложка</a>
+  <a href="/#manifest">Манифест</a>
+  <a href="/#authors">Авторам</a>
+  <a href="/forum/" class="active">Форум</a>
+</nav>
+
+<main class="wrap">
+
+  <h1 id="sectionTitle" class="forum-title"></h1>
+  <p id="sectionDescription" class="muted"></p>
+
+  <!-- FESTIVAL HEADER -->
+  <div id="festivalHeader" class="festival-header" style="display:none;">
+    <div class="festival-timer">
+      <strong>ДО ОКОНЧАНИЯ:</strong>
+      <span id="festivalCountdown">—</span>
+    </div>
+  </div>
+
+  <!-- CREATE THREAD -->
+  <div id="newThreadBox" class="card">
+    <strong>Новая тема</strong>
+    <input id="title" placeholder="Заголовок">
+    <textarea id="body" placeholder="Текст (markdown)"></textarea>
+    <button id="create">Опубликовать</button>
+  </div>
+
+  <!-- THREADS -->
+  <section id="threads"></section>
+
+</main>
+
+<script type="module">
+  import {
+    supabase,
+    currentUser,
+    listThreads,
+    createThread
+  } from "./forum.js";
+
+  const params = new URLSearchParams(location.search);
+  const section = params.get("type");
+
+  const sectionTitle = document.getElementById("sectionTitle");
+  const sectionDescription = document.getElementById("sectionDescription");
+  const threadsBox = document.getElementById("threads");
+  const newThreadBox = document.getElementById("newThreadBox");
+  const festivalHeader = document.getElementById("festivalHeader");
+
+  // ===== SECTION METADATA =====
+
+  const SECTION_META = {
+    festivals: {
+      title: "ЛИТЕРАТУРНЫЕ ФЕСТИВАЛИ",
+      description: "Коллективные конкурсы, дедлайны, жюри.",
+      readonly: false,
+      festival: true
+    },
+    duels: {
+      title: "ЛИТЕРАТУРНЫЕ ДУЭЛИ",
+      description: "Парные столкновения текстов.",
+      readonly: false
+    },
+    flood: {
+      title: "ФЛУДИЛКА",
+      description: "Разговоры, мета, обсуждение процесса.",
+      readonly: false
+    },
+    rules: {
+      title: "ПРАВИЛА ФОРУМА",
+      description: "Модерация, этика, принципы сообщества.",
+      readonly: true
+    }
+  };
+
+  const meta = SECTION_META[section];
+
+  if (!meta) {
+    sectionTitle.textContent = "Раздел не найден";
+    newThreadBox.style.display = "none";
+    throw new Error("Unknown section");
+  }
+
+  sectionTitle.textContent = meta.title;
+  sectionDescription.textContent = meta.description;
+
+  if (meta.festival) {
+    festivalHeader.style.display = "block";
+  }
+
+  // ===== THREAD LIST =====
+
+  async function loadThreads() {
+    const threads = await listThreads({ section });
+
+    threadsBox.innerHTML = threads.map(t => `
+      <div class="card">
+        <a href="thread.html?id=${t.id}">
+          <strong>${t.title}</strong>
+        </a>
+        <div class="muted">
+          ${new Date(t.created_at).toLocaleString()}
+        </div>
+      </div>
+    `).join("");
+  }
+
+  // ===== CREATE THREAD =====
+
+  async function initCreate() {
+    const user = await currentUser();
+
+    if (!user || meta.readonly) {
+      newThreadBox.style.display = "none";
+      return;
+    }
+
+    document.getElementById("create").onclick = async () => {
+      const title = document.getElementById("title").value;
+      const body = document.getElementById("body").value;
+
+      try {
+        await createThread({
+          title,
+          body_md: body,
+          section
+        });
+
+        document.getElementById("title").value = "";
+        document.getElementById("body").value = "";
+        loadThreads();
+      } catch (e) {
+        alert(e.message);
+      }
+    };
+  }
+
+  loadThreads();
+  initCreate();
+</script>
+
+</body>
+</html>
