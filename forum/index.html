@@ -11,63 +11,63 @@
 
 <body>
 
-<!-- === SIDE NAV === -->
-<nav class="side-nav" aria-label="Навигация">
-  <a href="/">Обложка</a>
-  <a href="/#manifest">Манифест</a>
-  <a href="/#authors">Авторам</a>
-  <a href="/forum/" class="active">Форум</a>
+<!-- === FORUM SIDE NAV === -->
+<nav class="forum-nav" aria-label="Навигация форума">
+  <a href="/" class="nav-root">ЖУРНАЛ</a>
+
+  <div class="nav-section">
+    <a href="festival.html">ФЕСТИВАЛЬ</a>
+    <a href="section.html?type=duels">ДУЭЛИ</a>
+    <a href="section.html?type=flood">ФЛУДИЛИЩЕ</a>
+    <a href="section.html?type=rules">ПРАВИЛА</a>
+  </div>
 </nav>
 
-<main class="wrap forum-hub">
+<main class="forum-main">
 
-  <h1 class="forum-title">ФОРУМ</h1>
+  <!-- TITLE -->
+  <header class="forum-header">
+    <h1 class="forum-title">ФОРУМ</h1>
 
-  <!-- === TOP BAR === -->
-  <div class="forum-topbar glass">
+    <!-- AUTH BAR -->
+    <div class="forum-auth glass">
+      <div id="loginBox" class="login-box" style="display:none;">
+        <input id="email" type="email" placeholder="email">
+        <input id="password" type="password" placeholder="пароль">
+        <button id="loginBtn" class="btn">Войти</button>
+      </div>
 
-    <!-- Guest -->
-    <div id="loginBox" class="login-box" style="display:none;">
-      <input id="email" type="email" placeholder="email">
-      <input id="password" type="password" placeholder="пароль">
-      <button id="loginBtn" class="btn">Войти</button>
-    </div>
-
-    <!-- User -->
-    <div id="userBox" class="user-box" style="display:none;">
-      <span class="muted" id="userStatus"></span>
-      <div class="forum-actions">
+      <div id="userBox" class="user-box" style="display:none;">
+        <span id="userStatus" class="muted"></span>
         <a href="profile.html" class="btn">Профиль</a>
         <button id="logoutBtn" class="btn">Выйти</button>
       </div>
     </div>
+  </header>
 
-  </div>
-
-  <!-- === SECTIONS GRID === -->
+  <!-- GRID -->
   <section class="forum-grid">
 
-    <!-- FESTIVAL -->
     <a href="festival.html" class="forum-tile glass accent">
-      <h2>ЛИТЕРАТУРНЫЙ ФЕСТИВАЛЬ</h2>
+      <span class="tile-kicker">Литературный фестиваль</span>
       <div class="tile-title">НЕ|БЫЛЬ–2026</div>
       <p>Коллективный конкурс, дедлайн, жюри, публикация в журнале.</p>
     </a>
 
-    <!-- DUELS -->
     <a href="section.html?type=duels" class="forum-tile glass">
+      <span class="tile-kicker">Раздел форума</span>
       <h2>ЛИТЕРАТУРНЫЕ ДУЭЛИ</h2>
       <p>Парные столкновения текстов. Анонимно или открыто.</p>
     </a>
 
-    <!-- FLOOD -->
     <a href="section.html?type=flood" class="forum-tile glass">
-      <h2>ФЛУДИЛКА</h2>
-      <p>Разговоры, мета, обсуждение процесса и жизни.</p>
+      <span class="tile-kicker">Раздел форума</span>
+      <h2>ФЛУДИЛИЩЕ</h2>
+      <p>Мета, разговоры, обсуждение процесса и жизни.</p>
     </a>
 
-    <!-- RULES -->
-    <a href="section.html?type=rules" class="forum-tile glass muted-tile">
+    <a href="section.html?type=rules" class="forum-tile glass muted">
+      <span class="tile-kicker">Информация</span>
       <h2>ПРАВИЛА ФОРУМА</h2>
       <p>Этика, модерация, принципы сообщества.</p>
     </a>
@@ -96,7 +96,7 @@
   function renderUser(user) {
     loginBox.style.display = "none";
     userBox.style.display = "flex";
-    userStatus.textContent = "Вы вошли как: " + user.email;
+    userStatus.textContent = user.email;
   }
 
   renderGuest();
@@ -108,13 +108,7 @@
 
   loginBtn.onclick = async () => {
     if (!emailInput.value || !passwordInput.value) return;
-    try {
-      await signIn(emailInput.value, passwordInput.value);
-      emailInput.value = "";
-      passwordInput.value = "";
-    } catch (e) {
-      alert(e.message);
-    }
+    await signIn(emailInput.value, passwordInput.value);
   };
 
   logoutBtn.onclick = async () => {
