@@ -2,9 +2,10 @@
 
 .forum-main {
   max-width: 1200px;
-  margin: 0 auto;
+  margin-left: 180px; /* ← учитываем навигацию */
   padding: 4rem 3rem 6rem;
 }
+
 
 /* ===== TITLE ===== */
 
@@ -162,4 +163,64 @@
   letter-spacing: 0.2em;
   font-size: 1.2rem;
   margin-bottom: 1.5rem;
+}
+
+/* ===== USER BAR ===== */
+
+.user-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.user-greeting {
+  font-size: 0.9rem;
+  color: #aaa;
+  letter-spacing: 0.05em;
+}
+
+.user-actions {
+  display: flex;
+  gap: 0.8rem;
+}
+
+/* ===== BUTTONS ===== */
+
+.btn {
+  padding: 0.4rem 0.9rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.25);
+  color: #e6e6e6;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background: rgba(255,255,255,0.05);
+}
+
+.btn-ghost {
+  border-color: rgba(255,255,255,0.25);
+}
+
+.btn-danger {
+  border-color: rgba(143,42,42,0.6);
+  color: #b43a3a;
+}
+
+.btn-danger:hover {
+  background: rgba(143,42,42,0.12);
+}
+
+/* ===== FESTIVAL ACCENT ===== */
+
+.forum-tile.accent {
+  border-color: rgba(143,42,42,0.6);
+}
+
+.forum-tile .tile-title {
+  color: #b43a3a; /* спокойный красный УХРОНИИ */
 }
