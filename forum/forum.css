@@ -248,6 +248,29 @@ body {
   margin-bottom: 1.5rem;
 }
 
+/* ===== FESTIVAL TEXT ===== */
+
+.festival-text {
+  max-width: 720px;
+  margin: 0 auto 5rem;
+  line-height: 1.9;
+}
+
+.festival-text p {
+  margin-bottom: 1.6rem;
+}
+
+.festival-lead {
+  font-size: 1.05rem;
+  margin-bottom: 2.2rem;
+}
+
+.festival-note {
+  color: #999;
+  font-style: italic;
+}
+
+
 /* ===== FESTIVAL DEADLINE ===== */
 
 .festival-deadline {
