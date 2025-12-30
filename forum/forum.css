@@ -226,3 +226,84 @@
 .forum-tile .tile-title {
   color: #b43a3a; /* спокойный красный УХРОНИИ */
 }
+
+/* ===== BACKGROUND GLOW / SPARKS ===== */
+
+body {
+  position: relative;
+  overflow-x: hidden;
+}
+
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  inset: -20%;
+  pointer-events: none;
+  z-index: -1;
+  background-repeat: no-repeat;
+  mix-blend-mode: screen;
+}
+
+/* основной тёплый пульс */
+body::before {
+  background-image:
+    radial-gradient(
+      circle at 30% 90%,
+      rgba(180, 70, 40, 0.25),
+      transparent 60%
+    ),
+    radial-gradient(
+      circle at 70% 95%,
+      rgba(140, 40, 40, 0.2),
+      transparent 65%
+    );
+  filter: blur(80px);
+  animation: glow-rise 18s ease-in-out infinite;
+}
+
+/* искры */
+body::after {
+  background-image:
+    radial-gradient(
+      circle at 40% 100%,
+      rgba(220, 120, 60, 0.18),
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 60% 110%,
+      rgba(200, 80, 50, 0.15),
+      transparent 55%
+    );
+  filter: blur(60px);
+  animation: sparks-rise 26s linear infinite;
+}
+
+/* ===== ANIMATIONS ===== */
+
+@keyframes glow-rise {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateY(-8%) scale(1.05);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateY(-15%) scale(1);
+    opacity: 0.6;
+  }
+}
+
+@keyframes sparks-rise {
+  0% {
+    transform: translateY(0);
+    opacity: 0.4;
+  }
+  100% {
+    transform: translateY(-25%);
+    opacity: 0;
+  }
+}
+
