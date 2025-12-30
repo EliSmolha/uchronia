@@ -212,12 +212,13 @@
 }
 
 /* =========================================================
-   BACKGROUND GLOW / SPARKS
+   BACKGROUND — EMBERS / SPARKS
    ========================================================= */
 
 body {
   position: relative;
   overflow-x: hidden;
+  background: #0b0b0b;
 }
 
 body::before,
@@ -227,73 +228,62 @@ body::after {
   inset: -20%;
   pointer-events: none;
   z-index: -1;
-  background-repeat: no-repeat;
-  mix-blend-mode: screen;
 }
 
-/* основной тёплый пульс */
+/* ===== 1. БАЗОВЫЙ ЖАР (ФОН) ===== */
 body::before {
-  background-image:
-    radial-gradient(
-      circle at 30% 90%,
-      rgba(180, 70, 40, 0.25),
-      transparent 60%
-    ),
-    radial-gradient(
-      circle at 70% 95%,
-      rgba(140, 40, 40, 0.2),
-      transparent 65%
-    );
-  filter: blur(80px);
-  animation: glow-rise 18s ease-in-out infinite;
+  background:
+    radial-gradient(circle at 25% 95%, rgba(140, 40, 40, 0.18), transparent 60%),
+    radial-gradient(circle at 70% 100%, rgba(180, 70, 40, 0.14), transparent 65%);
+  filter: blur(90px);
+  animation: base-glow 22s ease-in-out infinite;
 }
 
-/* искры */
+/* ===== 2. УГОЛЬКИ ===== */
 body::after {
-  background-image:
-    radial-gradient(
-      circle at 40% 100%,
-      rgba(220, 120, 60, 0.18),
-      transparent 50%
-    ),
-    radial-gradient(
-      circle at 60% 110%,
-      rgba(200, 80, 50, 0.15),
-      transparent 55%
-    );
-  filter: blur(60px);
-  animation: sparks-rise 26s linear infinite;
+  background:
+    radial-gradient(circle, rgba(220,120,60,0.45) 0%, transparent 55%),
+    radial-gradient(circle, rgba(200,80,50,0.4) 0%, transparent 60%),
+    radial-gradient(circle, rgba(255,160,90,0.35) 0%, transparent 55%);
+  background-size:
+    18px 18px,
+    14px 14px,
+    10px 10px;
+  background-position:
+    20% 110%,
+    55% 120%,
+    75% 115%;
+  filter: blur(2px);
+  animation: embers-rise 14s linear infinite;
 }
 
 /* =========================================================
    ANIMATIONS
    ========================================================= */
 
-@keyframes glow-rise {
-  0% {
-    transform: translateY(0) scale(1);
-    opacity: 0.6;
-  }
-  50% {
-    transform: translateY(-8%) scale(1.05);
-    opacity: 0.9;
-  }
-  100% {
-    transform: translateY(-15%) scale(1);
-    opacity: 0.6;
-  }
+@keyframes base-glow {
+  0%   { opacity: 0.35; }
+  50%  { opacity: 0.6; }
+  100% { opacity: 0.35; }
 }
 
-@keyframes sparks-rise {
+@keyframes embers-rise {
   0% {
-    transform: translateY(0);
-    opacity: 0.4;
+    transform: translateY(0) scale(1);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  70% {
+    opacity: 0.8;
   }
   100% {
-    transform: translateY(-25%);
+    transform: translateY(-120vh) scale(0.4);
     opacity: 0;
   }
 }
+
 
 /* =========================================================
    MOBILE
