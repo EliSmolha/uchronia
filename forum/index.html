@@ -8,132 +8,197 @@
 
   <link rel="stylesheet" href="/style.css">
   <link rel="stylesheet" href="/forum/forum.css">
+
 </head>
-  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+
 <body>
-<div id="particles-bg"></div>
 
-<!-- === FORUM SIDE NAV === -->
-<nav class="forum-nav" aria-label="Навигация форума">
-  <a href="/" class="nav-root">ЖУРНАЛ</a>
+  <!-- PARTICLES BACKGROUND -->
+  <div id="particles-bg"></div>
 
-  <div class="nav-section">
-    <a href="festival.html">ФЕСТИВАЛЬ</a>
-    <a href="section.html?type=duels">ДУЭЛИ</a>
-    <a href="section.html?type=flood">ФЛУДИЛИЩЕ</a>
-    <a href="section.html?type=rules">ПРАВИЛА</a>
-  </div>
-</nav>
+  <!-- === FORUM SIDE NAV === -->
+  <nav class="forum-nav" aria-label="Навигация форума">
+    <a href="/" class="nav-root">ЖУРНАЛ</a>
 
-<main class="forum-main">
-
-  <!-- TITLE -->
-  <header class="forum-header">
-    <h1 class="forum-title">ФОРУМ</h1>
-
-    <!-- AUTH BAR -->
-    <div class="forum-auth glass">
-      <div id="loginBox" class="login-box" style="display:none;">
-        <input id="email" type="email" placeholder="email">
-        <input id="password" type="password" placeholder="пароль">
-        <button id="loginBtn" class="btn">Войти</button>
-      </div>
-
-<div id="userBox" class="user-box" style="display:none;">
-  <span id="userStatus" class="user-greeting"></span>
-
-  <div class="user-actions">
-    <a href="profile.html" class="btn btn-ghost">Профиль</a>
-    <button id="logoutBtn" class="btn btn-danger">Выйти</button>
-  </div>
-</div>
+    <div class="nav-section">
+      <a href="festival.html">ФЕСТИВАЛЬ</a>
+      <a href="section.html?type=duels">ДУЭЛИ</a>
+      <a href="section.html?type=flood">ФЛУДИЛИЩЕ</a>
+      <a href="section.html?type=rules">ПРАВИЛА</a>
     </div>
-  </header>
+  </nav>
 
-  <!-- GRID -->
-  <section class="forum-grid">
+  <main class="forum-main">
 
-    <a href="festival.html" class="forum-tile glass accent">
-      <span class="tile-kicker">Литературный фестиваль</span>
-      <div class="tile-title">НЕ|БЫЛЬ–2026</div>
-      <p>Коллективный конкурс, дедлайн, жюри, публикация в журнале.</p>
-    </a>
+    <!-- TITLE -->
+    <header class="forum-header">
+      <h1 class="forum-title">ФОРУМ</h1>
 
-    <a href="section.html?type=duels" class="forum-tile glass">
-      <span class="tile-kicker">Раздел форума</span>
-      <h2>ЛИТЕРАТУРНЫЕ ДУЭЛИ</h2>
-      <p>Парные столкновения текстов. Анонимно или открыто.</p>
-    </a>
+      <!-- AUTH BAR -->
+      <div class="forum-auth glass">
+        <div id="loginBox" class="login-box" style="display:none;">
+          <input id="email" type="email" placeholder="email">
+          <input id="password" type="password" placeholder="пароль">
+          <button id="loginBtn" class="btn">Войти</button>
+        </div>
 
-    <a href="section.html?type=flood" class="forum-tile glass">
-      <span class="tile-kicker">Раздел форума</span>
-      <h2>ФЛУДИЛИЩЕ</h2>
-      <p>Мета, разговоры, обсуждение процесса и жизни.</p>
-    </a>
+        <div id="userBox" class="user-box" style="display:none;">
+          <span id="userStatus" class="user-greeting"></span>
 
-    <a href="section.html?type=rules" class="forum-tile glass muted">
-      <span class="tile-kicker">Информация</span>
-      <h2>ПРАВИЛА ФОРУМА</h2>
-      <p>Этика, модерация, принципы сообщества.</p>
-    </a>
+          <div class="user-actions">
+            <a href="profile.html" class="btn btn-ghost">Профиль</a>
+            <button id="logoutBtn" class="btn btn-danger">Выйти</button>
+          </div>
+        </div>
+      </div>
+    </header>
 
-  </section>
+    <!-- GRID -->
+    <section class="forum-grid">
 
-</main>
+      <a href="festival.html" class="forum-tile glass accent">
+        <span class="tile-kicker">Литературный фестиваль</span>
+        <div class="tile-title">НЕ|БЫЛЬ–2026</div>
+        <p>Коллективный конкурс, дедлайн, жюри, публикация в журнале.</p>
+      </a>
 
-<script type="module">
-  import { supabase, signIn, signOut } from "./forum.js";
+      <a href="section.html?type=duels" class="forum-tile glass">
+        <span class="tile-kicker">Раздел форума</span>
+        <h2>ЛИТЕРАТУРНЫЕ ДУЭЛИ</h2>
+        <p>Парные столкновения текстов. Анонимно или открыто.</p>
+      </a>
 
-  const loginBox = document.getElementById("loginBox");
-  const userBox = document.getElementById("userBox");
-  const userStatus = document.getElementById("userStatus");
+      <a href="section.html?type=flood" class="forum-tile glass">
+        <span class="tile-kicker">Раздел форума</span>
+        <h2>ФЛУДИЛИЩЕ</h2>
+        <p>Мета, разговоры, обсуждение процесса и жизни.</p>
+      </a>
 
-  const emailInput = document.getElementById("email");
-  const passwordInput = document.getElementById("password");
-  const loginBtn = document.getElementById("loginBtn");
-  const logoutBtn = document.getElementById("logoutBtn");
+      <a href="section.html?type=rules" class="forum-tile glass muted">
+        <span class="tile-kicker">Информация</span>
+        <h2>ПРАВИЛА ФОРУМА</h2>
+        <p>Этика, модерация, принципы сообщества.</p>
+      </a>
 
-  function renderGuest() {
-    loginBox.style.display = "flex";
-    userBox.style.display = "none";
-  }
+    </section>
 
-async function renderUser(user) {
-  loginBox.style.display = "none";
-  userBox.style.display = "flex";
+  </main>
 
-  // пробуем получить профиль
-  const { data } = await supabase
-    .from("profiles")
-    .select("display_name, username")
-    .eq("id", user.id)
-    .single();
+  <!-- PARTICLES.JS LIBRARY -->
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
 
-  const nick =
-    data?.display_name ||
-    data?.username ||
-    user.email.split("@")[0];
+  <!-- PARTICLES INIT -->
+  <script>
+    particlesJS("particles-bg", {
+      "particles": {
+        "number": {
+          "value": 400,
+          "density": {
+            "enable": true,
+            "value_area": 800
+          }
+        },
+        "color": {
+          "value": "#ffffff"
+        },
+        "shape": {
+          "type": "circle",
+          "stroke": {
+            "width": 0,
+            "color": "#000000"
+          }
+        },
+        "opacity": {
+          "value": 0.5,
+          "random": true
+        },
+        "size": {
+          "value": 6,
+          "random": true
+        },
+        "line_linked": {
+          "enable": false
+        },
+        "move": {
+          "enable": true,
+          "speed": 1,
+          "direction": "bottom",
+          "straight": false,
+          "out_mode": "out"
+        }
+      },
+      "interactivity": {
+        "detect_on": "canvas",
+        "events": {
+          "onhover": {
+            "enable": true,
+            "mode": "repulse"
+          },
+          "resize": true
+        },
+        "modes": {
+          "repulse": {
+            "distance": 110,
+            "duration": 0.4
+          }
+        }
+      },
+      "retina_detect": true
+    });
+  </script>
 
-  userStatus.textContent = `Однажды печаль пройдёт, ${nick}`;
-}
+  <!-- AUTH LOGIC -->
+  <script type="module">
+    import { supabase, signIn, signOut } from "./forum.js";
 
+    const loginBox = document.getElementById("loginBox");
+    const userBox = document.getElementById("userBox");
+    const userStatus = document.getElementById("userStatus");
 
-  renderGuest();
+    const emailInput = document.getElementById("email");
+    const passwordInput = document.getElementById("password");
+    const loginBtn = document.getElementById("loginBtn");
+    const logoutBtn = document.getElementById("logoutBtn");
 
-  supabase.auth.onAuthStateChange((_, session) => {
-    if (session?.user) renderUser(session.user);
-    else renderGuest();
-  });
+    function renderGuest() {
+      loginBox.style.display = "flex";
+      userBox.style.display = "none";
+    }
 
-  loginBtn.onclick = async () => {
-    if (!emailInput.value || !passwordInput.value) return;
-    await signIn(emailInput.value, passwordInput.value);
-  };
+    async function renderUser(user) {
+      loginBox.style.display = "none";
+      userBox.style.display = "flex";
 
-  logoutBtn.onclick = async () => {
-    await signOut();
-  };
-</script>
+      const { data } = await supabase
+        .from("profiles")
+        .select("display_name, username")
+        .eq("id", user.id)
+        .single();
+
+      const nick =
+        data?.display_name ||
+        data?.username ||
+        user.email.split("@")[0];
+
+      userStatus.textContent = `Однажды печаль пройдёт, ${nick}`;
+    }
+
+    renderGuest();
+
+    supabase.auth.onAuthStateChange((_, session) => {
+      if (session?.user) renderUser(session.user);
+      else renderGuest();
+    });
+
+    loginBtn.onclick = async () => {
+      if (!emailInput.value || !passwordInput.value) return;
+      await signIn(emailInput.value, passwordInput.value);
+    };
+
+    logoutBtn.onclick = async () => {
+      await signOut();
+    };
+  </script>
 
 </body>
 </html>
