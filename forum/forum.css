@@ -1,0 +1,37 @@
+/* ===== FESTIVAL ===== */
+
+.festival-title {
+  font-family: "Terpsichora";
+  font-size: 3.5rem;
+  letter-spacing: 0.25em;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.festival-countdown {
+  text-align: center;
+  font-size: 1.1rem;
+  margin-bottom: 3rem;
+}
+
+.festival-countdown .label {
+  color: #777;
+  margin-right: 0.5rem;
+}
+
+.festival-description p {
+  line-height: 1.9;
+  margin-bottom: 1.2rem;
+}
+
+.festival-pinned,
+.festival-submissions {
+  margin-top: 4rem;
+}
+
+.festival-pinned h2,
+.festival-submissions h2 {
+  letter-spacing: 0.2em;
+  font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+}
