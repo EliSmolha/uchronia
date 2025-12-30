@@ -11,7 +11,7 @@
 
 <body>
 
-<!-- === SIDE NAV (ТОТ ЖЕ, ЧТО НА САЙТЕ) === -->
+<!-- === SIDE NAV === -->
 <nav class="side-nav" aria-label="Навигация">
   <a href="/">Обложка</a>
   <a href="/#manifest">Манифест</a>
@@ -19,53 +19,57 @@
   <a href="/forum/" class="active">Форум</a>
 </nav>
 
-<main class="wrap">
+<main class="wrap forum-hub">
 
   <h1 class="forum-title">ФОРУМ</h1>
 
   <!-- === TOP BAR === -->
-  <div class="forum-topbar">
+  <div class="forum-topbar glass">
 
-    <!-- Guest: login box -->
-    <div id="loginBox" class="login-box" aria-label="Вход" style="display:none;">
-      <input id="email" type="email" placeholder="email" autocomplete="email">
-      <input id="password" type="password" placeholder="пароль" autocomplete="current-password">
-      <button id="loginBtn" class="btn" type="button">Войти</button>
-      <a id="registerLink" href="/forum/auth.html" class="muted" style="text-decoration:none;">Регистрация</a>
+    <!-- Guest -->
+    <div id="loginBox" class="login-box" style="display:none;">
+      <input id="email" type="email" placeholder="email">
+      <input id="password" type="password" placeholder="пароль">
+      <button id="loginBtn" class="btn">Войти</button>
     </div>
 
-    <!-- Authed: user box -->
+    <!-- User -->
     <div id="userBox" class="user-box" style="display:none;">
-      <div class="muted" id="userStatus"></div>
+      <span class="muted" id="userStatus"></span>
       <div class="forum-actions">
-        <a id="profileBtn" href="profile.html" class="btn">Профиль</a>
-        <button id="logoutBtn" class="btn" type="button">Выйти</button>
+        <a href="profile.html" class="btn">Профиль</a>
+        <button id="logoutBtn" class="btn">Выйти</button>
       </div>
     </div>
 
   </div>
 
-  <!-- === SECTIONS === -->
-  <section class="forum-sections" aria-label="Разделы форума">
+  <!-- === SECTIONS GRID === -->
+  <section class="forum-grid">
 
-    <a class="forum-section" href="section.html?type=festivals">
-      <h2>ЛИТЕРАТУРНЫЕ ФЕСТИВАЛИ</h2>
-      <p>Коллективные конкурсы, номера, дедлайны, жюри.</p>
+    <!-- FESTIVAL -->
+    <a href="festival.html" class="forum-tile glass accent">
+      <h2>ЛИТЕРАТУРНЫЙ ФЕСТИВАЛЬ</h2>
+      <div class="tile-title">НЕ|БЫЛЬ–2026</div>
+      <p>Коллективный конкурс, дедлайн, жюри, публикация в журнале.</p>
     </a>
 
-    <a class="forum-section" href="section.html?type=duels">
+    <!-- DUELS -->
+    <a href="section.html?type=duels" class="forum-tile glass">
       <h2>ЛИТЕРАТУРНЫЕ ДУЭЛИ</h2>
-      <p>Парные столкновения текстов, анонимные или открытые.</p>
+      <p>Парные столкновения текстов. Анонимно или открыто.</p>
     </a>
 
-    <a class="forum-section" href="section.html?type=flood">
+    <!-- FLOOD -->
+    <a href="section.html?type=flood" class="forum-tile glass">
       <h2>ФЛУДИЛКА</h2>
       <p>Разговоры, мета, обсуждение процесса и жизни.</p>
     </a>
 
-    <a class="forum-section" href="section.html?type=rules">
+    <!-- RULES -->
+    <a href="section.html?type=rules" class="forum-tile glass muted-tile">
       <h2>ПРАВИЛА ФОРУМА</h2>
-      <p>Модерация, этика, принципы сообщества.</p>
+      <p>Этика, модерация, принципы сообщества.</p>
     </a>
 
   </section>
@@ -77,18 +81,16 @@
 
   const loginBox = document.getElementById("loginBox");
   const userBox = document.getElementById("userBox");
-
   const userStatus = document.getElementById("userStatus");
+
   const emailInput = document.getElementById("email");
   const passwordInput = document.getElementById("password");
-
   const loginBtn = document.getElementById("loginBtn");
   const logoutBtn = document.getElementById("logoutBtn");
 
   function renderGuest() {
     loginBox.style.display = "flex";
     userBox.style.display = "none";
-    userStatus.textContent = "";
   }
 
   function renderUser(user) {
@@ -97,43 +99,26 @@
     userStatus.textContent = "Вы вошли как: " + user.email;
   }
 
-  // Базовое состояние: гость (пока Supabase восстанавливает сессию)
   renderGuest();
 
-  // Реактивно обновляем UI при любом изменении авторизации
   supabase.auth.onAuthStateChange((_, session) => {
     if (session?.user) renderUser(session.user);
     else renderGuest();
   });
 
-  // Вход
   loginBtn.onclick = async () => {
-    const email = emailInput.value.trim();
-    const password = passwordInput.value;
-
-    if (!email || !password) {
-      alert("Введите email и пароль.");
-      return;
-    }
-
+    if (!emailInput.value || !passwordInput.value) return;
     try {
-      await signIn(email, password);
+      await signIn(emailInput.value, passwordInput.value);
       emailInput.value = "";
       passwordInput.value = "";
-      // UI обновится через onAuthStateChange
     } catch (e) {
       alert(e.message);
     }
   };
 
-  // Выход
   logoutBtn.onclick = async () => {
-    try {
-      await signOut();
-      // UI обновится через onAuthStateChange
-    } catch (e) {
-      alert(e.message);
-    }
+    await signOut();
   };
 </script>
 
