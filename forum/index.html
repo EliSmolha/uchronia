@@ -1,1 +1,127 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>УХРОНИЯ — Форум</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <style>
+    body {
+      margin: 0;
+      background: #0b0b0b;
+      color: #e6e6e6;
+      font-family: Georgia, "Times New Roman", serif;
+    }
+
+    .wrap {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem;
+    }
+
+    h1 {
+      text-align: center;
+      letter-spacing: 0.2em;
+      font-weight: normal;
+    }
+
+    .card {
+      border: 1px solid rgba(255,255,255,0.2);
+      padding: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    input, button {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 0.8rem;
+      margin-top: 0.6rem;
+      background: #111;
+      color: #e6e6e6;
+      border: 1px solid rgba(255,255,255,0.3);
+      font-family: inherit;
+    }
+
+    button {
+      cursor: pointer;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    .status {
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      color: #b43a3a;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <h1>ФОРУМ</h1>
+
+    <div class="card">
+      <input id="email" type="email" placeholder="email">
+      <input id="password" type="password" placeholder="пароль">
+
+      <button id="login">Войти</button>
+      <button id="register">Регистрация</button>
+      <button id="logout">Выйти</button>
+
+      <div class="status" id="status"></div>
+    </div>
+  </div>
+
+  <script type="module">
+    import {
+      signUp,
+      signIn,
+      signOut,
+      currentUser
+    } from "./forum.js";
+
+    const status = document.getElementById("status");
+
+    async function refresh() {
+      const user = await currentUser();
+      if (user) {
+        status.textContent = "Вы вошли как: " + user.email;
+      } else {
+        status.textContent = "Вы не вошли";
+      }
+    }
+
+    document.getElementById("login").onclick = async () => {
+      try {
+        await signIn(
+          email.value.trim(),
+          password.value
+        );
+        await refresh();
+      } catch (e) {
+        status.textContent = e.message;
+      }
+    };
+
+    document.getElementById("register").onclick = async () => {
+      try {
+        await signUp(
+          email.value.trim(),
+          password.value
+        );
+        status.textContent = "Аккаунт создан. Теперь войдите.";
+      } catch (e) {
+        status.textContent = e.message;
+      }
+    };
+
+    document.getElementById("logout").onclick = async () => {
+      await signOut();
+      refresh();
+    };
+
+    refresh();
+  </script>
+</body>
+</html>
 
