@@ -100,77 +100,91 @@
     <div id="threads"></div>
   </div>
 
-  <script type="module">
-    import { supabase, currentUser, signOut } from "./forum.js";
+<script type="module">
+  import { supabase, currentUser, signOut } from "./forum.js";
 
-    const userStatus = document.getElementById("userStatus");
-    const threadsBox = document.getElementById("threads");
+  const userStatus = document.getElementById("userStatus");
+  const threadsBox = document.getElementById("threads");
+  const newThreadBox = document.getElementById("newThread");
+  const logoutBtn = document.getElementById("logout");
 
-    async function init() {
-      const user = await currentUser();
-      if (!user) {
-        userStatus.textContent = "Войдите, чтобы участвовать в форуме";
-        document.getElementById("newThread").style.display = "none";
-        return;
-      }
+  function renderLoggedOut() {
+    userStatus.textContent = "Войдите, чтобы участвовать в форуме";
+    newThreadBox.style.display = "none";
+    logoutBtn.style.display = "none";
+  }
 
-      userStatus.textContent = "Вы вошли как: " + user.email;
+  function renderLoggedIn(user) {
+    userStatus.textContent = "Вы вошли как: " + user.email;
+    newThreadBox.style.display = "block";
+    logoutBtn.style.display = "inline-block";
+    loadThreads();
+  }
+
+  async function loadThreads() {
+    const { data, error } = await supabase
+      .from("threads")
+      .select("id, title, created_at")
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      threadsBox.textContent = error.message;
+      return;
+    }
+
+    threadsBox.innerHTML = data.map(t => `
+      <div class="card">
+        <a class="thread-title" href="thread.html?id=${t.id}">
+          ${t.title}
+        </a>
+        <div class="muted">
+          ${new Date(t.created_at).toLocaleString()}
+        </div>
+      </div>
+    `).join("");
+  }
+
+  // --- СОСТОЯНИЕ ПРИ ЗАГРУЗКЕ ---
+  renderLoggedOut();
+
+  // --- СЛУШАЕМ AUTH ---
+  supabase.auth.onAuthStateChange((event, session) => {
+    if (session?.user) {
+      renderLoggedIn(session.user);
+    } else {
+      renderLoggedOut();
+    }
+  });
+
+  // --- СОЗДАНИЕ ТЕМЫ ---
+  document.getElementById("create").onclick = async () => {
+    const user = (await currentUser());
+    if (!user) return;
+
+    const title = document.getElementById("title").value.trim();
+    const body = document.getElementById("body").value.trim();
+    if (!title || !body) return;
+
+    const { error } = await supabase
+      .from("threads")
+      .insert({
+        title,
+        body_md: body,
+        author_id: user.id
+      });
+
+    if (!error) {
+      document.getElementById("title").value = "";
+      document.getElementById("body").value = "";
       loadThreads();
     }
+  };
 
-    async function loadThreads() {
-      const { data, error } = await supabase
-        .from("threads")
-        .select("id, title, created_at")
-        .order("created_at", { ascending: false });
+  logoutBtn.onclick = async () => {
+    await signOut();
+    location.reload();
+  };
+</script>
 
-      if (error) {
-        threadsBox.textContent = error.message;
-        return;
-      }
-
-      threadsBox.innerHTML = data.map(t => `
-        <div class="card">
-          <a class="thread-title" href="thread.html?id=${t.id}">
-            ${t.title}
-          </a>
-          <div class="muted">
-            ${new Date(t.created_at).toLocaleString()}
-          </div>
-        </div>
-      `).join("");
-    }
-
-    document.getElementById("create").onclick = async () => {
-      const user = await currentUser();
-      if (!user) return;
-
-      const title = document.getElementById("title").value.trim();
-      const body = document.getElementById("body").value.trim();
-
-      if (!title || !body) return;
-
-      const { error } = await supabase
-        .from("threads")
-        .insert({
-          title,
-          body_md: body,
-          author_id: user.id
-        });
-
-      if (!error) {
-        document.getElementById("title").value = "";
-        document.getElementById("body").value = "";
-        loadThreads();
-      }
-    };
-
-    document.getElementById("logout").onclick = async () => {
-      await signOut();
-      location.reload();
-    };
-
-    init();
-  </script>
 </body>
 </html>
