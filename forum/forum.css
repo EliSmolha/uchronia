@@ -251,8 +251,13 @@ body {
 /* ===== FESTIVAL TEXT ===== */
 
 .festival-text {
+  margin: 3rem 0 5rem;
+  padding: 3rem 3.5rem 3.5rem;
+}
+
+/* внутренний текст — аккуратная журнальная колонка */
+.festival-text-inner {
   max-width: 720px;
-  margin: 0 auto 5rem;
   line-height: 1.9;
 }
 
