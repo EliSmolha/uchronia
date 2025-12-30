@@ -11,8 +11,11 @@
 
 <body>
 
+<!-- === PARTICLES BACKGROUND (общий для форума) === -->
+<div id="particles-bg"></div>
+
 <!-- === FORUM NAV === -->
-<nav class="forum-nav">
+<nav class="forum-nav" aria-label="Навигация форума">
   <a href="/" class="nav-root">ЖУРНАЛ</a>
   <a href="/forum/festival.html">ФЕСТИВАЛЬ</a>
   <a href="/forum/section.html?type=duels">ДУЭЛИ</a>
@@ -25,19 +28,29 @@
   <!-- === TITLE === -->
   <h1 class="festival-title">НЕ|БЫЛЬ–2026</h1>
 
-  <!-- === COUNTDOWN BLOCK === -->
+  <!-- === COUNTDOWN === -->
   <section class="festival-countdown glass">
 
-    <div class="hourglass">
-      <div class="sand top"></div>
-      <div class="sand bottom"></div>
-    </div>
+    <div id="countdown" class="countdown-2026">
+      <div class="countdown-item days">
+        <span class="num" id="days">00</span>
+        <span class="label">дней</span>
+      </div>
 
-    <div class="countdown-numbers" id="countdown">
-      <span><b id="days">00</b>д</span>
-      <span><b id="hours">00</b>ч</span>
-      <span><b id="minutes">00</b>м</span>
-      <span><b id="seconds">00</b>с</span>
+      <div class="countdown-item hours">
+        <span class="num" id="hours">00</span>
+        <span class="label">часов</span>
+      </div>
+
+      <div class="countdown-item minutes">
+        <span class="num" id="minutes">00</span>
+        <span class="label">минут</span>
+      </div>
+
+      <div class="countdown-item seconds">
+        <span class="num" id="seconds">00</span>
+        <span class="label">секунд</span>
+      </div>
     </div>
 
   </section>
@@ -45,20 +58,21 @@
   <!-- === DESCRIPTION === -->
   <section class="festival-description glass">
     <p>
-      <strong>НЕ|БЫЛЬ–2026</strong> — литературный фестиваль фантастики и фэнтези.
-      Развлекательный текст 
-      
+      <strong>НЕ|БЫЛЬ–2026</strong> — литературный фестиваль научной фантастики и фэнтези,
+      первый на площадке "УХРОНИИ". 
     </p>
 
     <p>
-      Мы принимаем конкурсные рассказы, экспериментальные формы,
-      гибриды прозы и эссе.  
-      Лучшие работы будут опубликованы в номере журнала.
+      Мы принимаем тексты размером до 50000 знаков (без учета пробелов).
+      В тексте должен присутствовать сюжетно значимый фантастический элемент. 
+      К участию в фестивале принимаются также и интерактивные тексты (литРПГ, визуальные новеллы). 
+
+      Срок приема работ: до 01 июня 2026 года. 
     </p>
 
     <p>
-      Время — наш основной материал.  
-      Песок уже сыпется.
+      Основная цель фестиваля — построение сообщества, мотивация и поддержка
+      авторов разных уровней. 
     </p>
   </section>
 
@@ -74,7 +88,7 @@
 
       <div class="forum-tile glass muted">
         <div class="tile-kicker">Информация</div>
-        <h3>Как подать работу</h3>
+        <h3>Как подать работу?</h3>
       </div>
     </div>
   </section>
@@ -84,38 +98,67 @@
     <h2>КОНКУРСНЫЕ РАБОТЫ</h2>
 
     <div class="forum-grid">
-      <!-- здесь потом будут темы -->
       <div class="forum-tile glass muted">
-        <p>Работы появятся после начала приёма.</p>
+        <p>Работы появятся здесь 10-го июня 2026 года.</p>
       </div>
     </div>
   </section>
 
 </main>
 
+<!-- === PARTICLES.JS === -->
+<script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+<script>
+particlesJS("particles-bg", {
+  "particles": {
+    "number": { "value": 260, "density": { "enable": true, "value_area": 900 }},
+    "color": { "value": "#ffffff" },
+    "shape": { "type": "circle" },
+    "opacity": { "value": 0.4, "random": true },
+    "size": { "value": 4, "random": true },
+    "line_linked": { "enable": false },
+    "move": {
+      "enable": true,
+      "speed": 0.6,
+      "direction": "bottom",
+      "out_mode": "out"
+    }
+  },
+  "interactivity": {
+    "events": {
+      "onhover": { "enable": true, "mode": "repulse" },
+      "resize": true
+    },
+    "modes": {
+      "repulse": { "distance": 120, "duration": 0.4 }
+    }
+  },
+  "retina_detect": true
+});
+</script>
+
 <!-- === COUNTDOWN SCRIPT === -->
 <script>
-  // ДЕДЛАЙН — поменяй дату
-  const deadline = new Date("2026-03-01T23:59:59Z").getTime();
+const deadline = new Date("2026-06-01T23:59:59Z").getTime();
 
-  function updateCountdown() {
-    const now = new Date().getTime();
-    let diff = deadline - now;
-    if (diff < 0) diff = 0;
+function updateCountdown() {
+  const now = Date.now();
+  let diff = deadline - now;
+  if (diff < 0) diff = 0;
 
-    const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
-    const m = Math.floor((diff / (1000 * 60)) % 60);
-    const s = Math.floor((diff / 1000) % 60);
+  const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+  const m = Math.floor((diff / (1000 * 60)) % 60);
+  const s = Math.floor((diff / 1000) % 60);
 
-    days.textContent = String(d).padStart(2, "0");
-    hours.textContent = String(h).padStart(2, "0");
-    minutes.textContent = String(m).padStart(2, "0");
-    seconds.textContent = String(s).padStart(2, "0");
-  }
+  days.textContent = d.toString().padStart(2, "0");
+  hours.textContent = h.toString().padStart(2, "0");
+  minutes.textContent = m.toString().padStart(2, "0");
+  seconds.textContent = s.toString().padStart(2, "0");
+}
 
-  updateCountdown();
-  setInterval(updateCountdown, 1000);
+updateCountdown();
+setInterval(updateCountdown, 1000);
 </script>
 
 </body>
