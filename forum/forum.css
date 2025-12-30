@@ -352,6 +352,45 @@ body {
   z-index: 1;
 }
 
+/* ===== FESTIVAL TEXT BLOCK ===== */
+
+.festival-text {
+  margin: 4rem auto 6rem;
+  max-width: 880px;
+}
+
+.festival-text-inner {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 3rem 3.5rem 3.5rem;
+  line-height: 1.9;
+}
+
+/* текстовые акценты */
+
+.festival-text p {
+  margin-bottom: 1.8rem;
+}
+
+.festival-lead {
+  font-size: 1.05rem;
+  margin-bottom: 2.4rem;
+}
+
+.festival-note {
+  color: #999;
+  font-style: italic;
+  margin-top: 2.8rem;
+}
+
+/* мобильная версия */
+
+@media (max-width: 900px) {
+  .festival-text-inner {
+    padding: 2.2rem 2rem 2.6rem;
+  }
+}
+
 
 /* =========================================================
    MOBILE
