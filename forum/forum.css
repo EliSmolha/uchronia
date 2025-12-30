@@ -391,6 +391,14 @@ body {
   }
 }
 
+/* ===== FESTIVAL TEXT ACCENTS ===== */
+
+.festival-text strong {
+  color: #b43a3a;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
 
 /* =========================================================
    MOBILE
