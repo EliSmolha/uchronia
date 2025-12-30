@@ -73,14 +73,11 @@
   </div>
 
   <script type="module">
-    import {
-      signUp,
-      signIn,
-      signOut,
-      currentUser
-    } from "./forum.js";
+    import { signUp, signIn, signOut, currentUser } from "./forum.js";
 
     const status = document.getElementById("status");
+    const emailInput = document.getElementById("email");
+    const passwordInput = document.getElementById("password");
 
     async function refresh() {
       const user = await currentUser();
@@ -94,10 +91,10 @@
     document.getElementById("login").onclick = async () => {
       try {
         await signIn(
-          email.value.trim(),
-          password.value
+          emailInput.value.trim(),
+          passwordInput.value
         );
-        await refresh();
+        refresh();
       } catch (e) {
         status.textContent = e.message;
       }
@@ -106,8 +103,8 @@
     document.getElementById("register").onclick = async () => {
       try {
         await signUp(
-          email.value.trim(),
-          password.value
+          emailInput.value.trim(),
+          passwordInput.value
         );
         status.textContent = "Аккаунт создан. Теперь войдите.";
       } catch (e) {
@@ -124,4 +121,3 @@
   </script>
 </body>
 </html>
-
