@@ -322,6 +322,36 @@ body {
   }
 }
 
+/* ===== SECTION TITLES ===== */
+
+.section-title {
+  margin: 5rem 0 2rem;
+  letter-spacing: 0.25em;
+  font-size: 1.1rem;
+  color: #e6e6e6;
+}
+
+/* ===== FESTIVAL HEADER ===== */
+
+.festival-header {
+  margin-bottom: 3rem;
+}
+
+/* ===== FIX BACKGROUND STACKING ===== */
+
+body {
+  position: relative;
+}
+
+#particles-bg {
+  z-index: -5;
+}
+
+.forum-nav,
+.forum-main {
+  z-index: 1;
+}
+
 
 /* =========================================================
    MOBILE
