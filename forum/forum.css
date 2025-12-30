@@ -212,78 +212,31 @@
 }
 
 /* =========================================================
-   LAVA LAMP BACKGROUND (REAL)
+   PARTICLES BACKGROUND
    ========================================================= */
 
-body {
-  background: #0b0b0b;
-  overflow-x: hidden;
-}
-
-/* контейнер лавы */
-body::before {
-  content: "";
+#particles-bg {
   position: fixed;
-  inset: -20%;
-  z-index: -1;
-  pointer-events: none;
-
-  filter: blur(90px);
-  background:
-    radial-gradient(circle at 20% 80%, rgba(140,40,40,0.45), transparent 45%),
-    radial-gradient(circle at 70% 75%, rgba(180,70,40,0.38), transparent 50%),
-    radial-gradient(circle at 40% 30%, rgba(200,90,50,0.42), transparent 48%),
-    radial-gradient(circle at 80% 35%, rgba(120,30,30,0.35), transparent 52%);
-
-  animation: lava-drift 60s ease-in-out infinite alternate;
-}
-
-/* второй слой — медленный, глубокий */
-body::after {
-  content: "";
-  position: fixed;
-  inset: -30%;
+  inset: 0;
   z-index: -2;
   pointer-events: none;
 
-  filter: blur(160px);
-  background:
-    radial-gradient(circle at 50% 50%, rgba(90,20,20,0.25), transparent 65%);
-
-  animation: lava-rotate 120s linear infinite;
+  /* градиент ПОД частицами */
+  background: linear-gradient(
+    135deg,
+    #0b0b0b 0%,
+    #1a0f0b 35%,
+    #2b140c 65%,
+    #120a07 100%
+  );
 }
 
-
-/* =========================================================
-   LAVA MOTION
-   ========================================================= */
-
-@keyframes lava-drift {
-  0% {
-    transform: translate(0%, 0%) scale(1);
-  }
-  25% {
-    transform: translate(-6%, 4%) scale(1.08);
-  }
-  50% {
-    transform: translate(5%, -6%) scale(0.95);
-  }
-  75% {
-    transform: translate(-4%, -3%) scale(1.05);
-  }
-  100% {
-    transform: translate(3%, 5%) scale(1);
-  }
+/* canvas, который создаёт particles.js */
+#particles-bg canvas {
+  position: absolute;
+  inset: 0;
 }
 
-@keyframes lava-rotate {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
 
 /* =========================================================
    MOBILE
