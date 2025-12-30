@@ -96,10 +96,6 @@
 
 /* ===== ACCENTS ===== */
 
-.accent {
-  border-color: rgba(180,0,0,0.6);
-}
-
 .muted {
   opacity: 0.7;
 }
