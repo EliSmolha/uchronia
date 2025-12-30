@@ -14,24 +14,34 @@
     }
 
     .wrap {
-      max-width: 600px;
+      max-width: 900px;
       margin: 0 auto;
-      padding: 3rem 1.5rem;
+      padding: 3rem 1.5rem 6rem;
     }
 
     h1 {
       text-align: center;
-      letter-spacing: 0.2em;
+      letter-spacing: 0.25em;
       font-weight: normal;
+      margin-bottom: 3rem;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      font-size: 0.9rem;
     }
 
     .card {
       border: 1px solid rgba(255,255,255,0.2);
-      padding: 1.5rem;
-      margin-top: 2rem;
+      padding: 1.4rem;
+      margin-bottom: 1.5rem;
+      background: rgba(255,255,255,0.03);
     }
 
-    input, button {
+    input, textarea, button {
       width: 100%;
       box-sizing: border-box;
       padding: 0.8rem;
@@ -42,17 +52,30 @@
       font-family: inherit;
     }
 
+    textarea { min-height: 140px; }
+
     button {
       cursor: pointer;
       letter-spacing: 0.15em;
       text-transform: uppercase;
     }
 
-    .status {
-      margin-top: 1rem;
-      font-size: 0.9rem;
-      color: #b43a3a;
+    .muted {
+      color: #777;
+      font-size: 0.85rem;
     }
+
+    .thread-title {
+      font-size: 1.2rem;
+      margin: 0 0 0.4rem;
+    }
+
+    a {
+      color: #f2f2f2;
+      text-decoration: none;
+    }
+
+    a:hover { text-decoration: underline; }
   </style>
 </head>
 
@@ -60,64 +83,94 @@
   <div class="wrap">
     <h1>ФОРУМ</h1>
 
-    <div class="card">
-      <input id="email" type="email" placeholder="email">
-      <input id="password" type="password" placeholder="пароль">
-
-      <button id="login">Войти</button>
-      <button id="register">Регистрация</button>
+    <div class="topbar">
+      <div id="userStatus" class="muted"></div>
       <button id="logout">Выйти</button>
-
-      <div class="status" id="status"></div>
     </div>
+
+    <!-- Создание темы -->
+    <div class="card" id="newThread">
+      <strong>Новая тема</strong>
+      <input id="title" placeholder="Заголовок">
+      <textarea id="body" placeholder="Текст (markdown)"></textarea>
+      <button id="create">Опубликовать</button>
+    </div>
+
+    <!-- Список тем -->
+    <div id="threads"></div>
   </div>
 
   <script type="module">
-    import { signUp, signIn, signOut, currentUser } from "./forum.js";
+    import { supabase, currentUser, signOut } from "./forum.js";
 
-    const status = document.getElementById("status");
-    const emailInput = document.getElementById("email");
-    const passwordInput = document.getElementById("password");
+    const userStatus = document.getElementById("userStatus");
+    const threadsBox = document.getElementById("threads");
 
-    async function refresh() {
+    async function init() {
       const user = await currentUser();
-      if (user) {
-        status.textContent = "Вы вошли как: " + user.email;
-      } else {
-        status.textContent = "Вы не вошли";
+      if (!user) {
+        userStatus.textContent = "Войдите, чтобы участвовать в форуме";
+        document.getElementById("newThread").style.display = "none";
+        return;
       }
+
+      userStatus.textContent = "Вы вошли как: " + user.email;
+      loadThreads();
     }
 
-    document.getElementById("login").onclick = async () => {
-      try {
-        await signIn(
-          emailInput.value.trim(),
-          passwordInput.value
-        );
-        refresh();
-      } catch (e) {
-        status.textContent = e.message;
-      }
-    };
+    async function loadThreads() {
+      const { data, error } = await supabase
+        .from("threads")
+        .select("id, title, created_at")
+        .order("created_at", { ascending: false });
 
-    document.getElementById("register").onclick = async () => {
-      try {
-        await signUp(
-          emailInput.value.trim(),
-          passwordInput.value
-        );
-        status.textContent = "Аккаунт создан. Теперь войдите.";
-      } catch (e) {
-        status.textContent = e.message;
+      if (error) {
+        threadsBox.textContent = error.message;
+        return;
+      }
+
+      threadsBox.innerHTML = data.map(t => `
+        <div class="card">
+          <a class="thread-title" href="thread.html?id=${t.id}">
+            ${t.title}
+          </a>
+          <div class="muted">
+            ${new Date(t.created_at).toLocaleString()}
+          </div>
+        </div>
+      `).join("");
+    }
+
+    document.getElementById("create").onclick = async () => {
+      const user = await currentUser();
+      if (!user) return;
+
+      const title = document.getElementById("title").value.trim();
+      const body = document.getElementById("body").value.trim();
+
+      if (!title || !body) return;
+
+      const { error } = await supabase
+        .from("threads")
+        .insert({
+          title,
+          body_md: body,
+          author_id: user.id
+        });
+
+      if (!error) {
+        document.getElementById("title").value = "";
+        document.getElementById("body").value = "";
+        loadThreads();
       }
     };
 
     document.getElementById("logout").onclick = async () => {
       await signOut();
-      refresh();
+      location.reload();
     };
 
-    refresh();
+    init();
   </script>
 </body>
 </html>
