@@ -1,4 +1,6 @@
-/* ===== FORUM LAYOUT ===== */
+/* =========================================================
+   FORUM LAYOUT
+   ========================================================= */
 
 .forum-main {
   max-width: 1200px;
@@ -6,9 +8,9 @@
   padding: 4rem 3rem 6rem;
 }
 
-
-
-/* ===== TITLE ===== */
+/* =========================================================
+   TITLE
+   ========================================================= */
 
 .forum-title {
   font-family: "Terpsichora";
@@ -19,7 +21,9 @@
   width: 100%;
 }
 
-/* ===== NAV ===== */
+/* =========================================================
+   NAVIGATION (FORUM)
+   ========================================================= */
 
 .forum-nav {
   position: fixed;
@@ -28,7 +32,7 @@
   bottom: 0;
   width: 180px;
   padding: 2rem 1.5rem;
-  background: rgba(0,0,0,0.6);
+  background: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(8px);
 }
 
@@ -46,14 +50,69 @@
   margin-bottom: 2.5rem;
 }
 
-/* ===== AUTH ===== */
+/* =========================================================
+   AUTH / USER BAR
+   ========================================================= */
 
 .forum-auth {
   padding: 1.2rem 1.5rem;
   margin-bottom: 3rem;
 }
 
-/* ===== GRID ===== */
+.user-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.user-greeting {
+  font-size: 0.9rem;
+  color: #aaa;
+  letter-spacing: 0.05em;
+}
+
+.user-actions {
+  display: flex;
+  gap: 0.8rem;
+}
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
+
+.btn {
+  padding: 0.4rem 0.9rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #e6e6e6;
+  cursor: pointer;
+  transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+}
+
+.btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.btn-ghost {
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.btn-danger {
+  border-color: rgba(143, 42, 42, 0.6);
+  color: #b43a3a;
+}
+
+.btn-danger:hover {
+  background: rgba(143, 42, 42, 0.12);
+}
+
+/* =========================================================
+   GRID
+   ========================================================= */
 
 .forum-grid {
   display: grid;
@@ -65,13 +124,16 @@
   padding: 2.6rem 2.8rem;
   color: #e6e6e6;
   text-decoration: none;
+  transition: transform 0.35s ease, border-color 0.35s ease;
 }
 
 .forum-tile:hover {
   transform: translateY(-4px);
 }
 
-/* ===== TYPO ===== */
+/* =========================================================
+   TYPOGRAPHY (TILES)
+   ========================================================= */
 
 .tile-kicker {
   font-size: 0.65rem;
@@ -87,47 +149,30 @@
   font-size: 2rem;
   letter-spacing: 0.25em;
   margin-bottom: 1rem;
+  color: #b43a3a; /* спокойный красный УХРОНИИ */
 }
 
-/* ===== GLASS ===== */
+/* =========================================================
+   GLASS / ACCENTS
+   ========================================================= */
 
 .glass {
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(12px);
 }
 
-/* ===== ACCENTS ===== */
+.accent {
+  border-color: rgba(143, 42, 42, 0.6);
+}
 
 .muted {
   opacity: 0.7;
 }
 
-/* ===== MOBILE ===== */
-
-@media (max-width: 900px) {
-
-  .forum-nav {
-    position: static;
-    width: auto;
-    display: flex;
-    gap: 1.2rem;
-    margin-bottom: 2rem;
-  }
-
-  .forum-main {
-    margin-left: 0;
-    padding: 2.5rem 1.5rem 4rem;
-  }
-
-  .forum-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-
-
-/* ===== FESTIVAL ===== */
+/* =========================================================
+   FESTIVAL PAGE
+   ========================================================= */
 
 .festival-title {
   font-family: "Terpsichora";
@@ -135,9 +180,8 @@
   letter-spacing: 0.25em;
   text-align: center;
   margin-bottom: 1.5rem;
-  color: #b43a3a; /* ← важно */
+  color: #b43a3a;
 }
-
 
 .festival-countdown {
   text-align: center;
@@ -167,67 +211,9 @@
   margin-bottom: 1.5rem;
 }
 
-/* ===== USER BAR ===== */
-
-.user-box {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-}
-
-.user-greeting {
-  font-size: 0.9rem;
-  color: #aaa;
-  letter-spacing: 0.05em;
-}
-
-.user-actions {
-  display: flex;
-  gap: 0.8rem;
-}
-
-/* ===== BUTTONS ===== */
-
-.btn {
-  padding: 0.4rem 0.9rem;
-  font-size: 0.7rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  background: transparent;
-  border: 1px solid rgba(255,255,255,0.25);
-  color: #e6e6e6;
-  cursor: pointer;
-}
-
-.btn:hover {
-  background: rgba(255,255,255,0.05);
-}
-
-.btn-ghost {
-  border-color: rgba(255,255,255,0.25);
-}
-
-.btn-danger {
-  border-color: rgba(143,42,42,0.6);
-  color: #b43a3a;
-}
-
-.btn-danger:hover {
-  background: rgba(143,42,42,0.12);
-}
-
-/* ===== FESTIVAL ACCENT ===== */
-
-.forum-tile.accent {
-  border-color: rgba(143,42,42,0.6);
-}
-
-.forum-tile .tile-title {
-  color: #b43a3a; /* спокойный красный УХРОНИИ */
-}
-
-/* ===== BACKGROUND GLOW / SPARKS ===== */
+/* =========================================================
+   BACKGROUND GLOW / SPARKS
+   ========================================================= */
 
 body {
   position: relative;
@@ -279,7 +265,9 @@ body::after {
   animation: sparks-rise 26s linear infinite;
 }
 
-/* ===== ANIMATIONS ===== */
+/* =========================================================
+   ANIMATIONS
+   ========================================================= */
 
 @keyframes glow-rise {
   0% {
@@ -307,3 +295,30 @@ body::after {
   }
 }
 
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+  .forum-nav {
+    position: static;
+    width: auto;
+    display: flex;
+    gap: 1.2rem;
+    margin-bottom: 2rem;
+  }
+
+  .forum-main {
+    margin-left: 0;
+    padding: 2.5rem 1.5rem 4rem;
+  }
+
+  .forum-title {
+    letter-spacing: 0.28em;
+  }
+
+  .forum-grid {
+    grid-template-columns: 1fr;
+  }
+}
