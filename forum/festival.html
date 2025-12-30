@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title>Не|быль-2026 — УХРОНИЯ</title>
+  <title>НЕ|БЫЛЬ–2026 — Литературный фестиваль</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <link rel="stylesheet" href="/style.css">
@@ -11,135 +11,112 @@
 
 <body>
 
-<!-- SIDE NAV -->
-<nav class="side-nav">
-  <a href="/">Обложка</a>
-  <a href="/#manifest">Манифест</a>
-  <a href="/#authors">Авторам</a>
-  <a href="/forum/">Форум</a>
+<!-- === FORUM NAV === -->
+<nav class="forum-nav">
+  <a href="/" class="nav-root">ЖУРНАЛ</a>
+  <a href="/forum/festival.html">ФЕСТИВАЛЬ</a>
+  <a href="/forum/section.html?type=duels">ДУЭЛИ</a>
+  <a href="/forum/section.html?type=flood">ФЛУДИЛИЩЕ</a>
+  <a href="/forum/section.html?type=rules">ПРАВИЛА</a>
 </nav>
 
-<main class="wrap festival-wrap">
+<main class="forum-main">
 
-  <!-- FESTIVAL HEADER -->
-  <header class="festival-header">
-    <h1 class="festival-title">НЕ|БЫЛЬ-2026</h1>
+  <!-- === TITLE === -->
+  <h1 class="festival-title">НЕ|БЫЛЬ–2026</h1>
 
-    <div class="festival-countdown">
-      <span class="label">До окончания приёма работ:</span>
-      <span id="countdown">—</span>
+  <!-- === COUNTDOWN BLOCK === -->
+  <section class="festival-countdown glass">
+
+    <div class="hourglass">
+      <div class="sand top"></div>
+      <div class="sand bottom"></div>
     </div>
-  </header>
 
-  <!-- FESTIVAL TEXT -->
-  <section class="festival-description card">
+    <div class="countdown-numbers" id="countdown">
+      <span><b id="days">00</b>д</span>
+      <span><b id="hours">00</b>ч</span>
+      <span><b id="minutes">00</b>м</span>
+      <span><b id="seconds">00</b>с</span>
+    </div>
+
+  </section>
+
+  <!-- === DESCRIPTION === -->
+  <section class="festival-description glass">
     <p>
-      «Не|быль» — литературный фестиваль журнала <strong>УХРОНИЯ</strong>,
-      посвящённый невозможному, несуществующему, вытесненному и
-      несказуемому. Мы ищем тексты, работающие с разрывами реальности,
-      ложной памятью, альтернативными историями и формами письма,
-      не укладывающимися в норматив.
+      <strong>НЕ|БЫЛЬ–2026</strong> — коллективный литературный фестиваль
+      журнала «УХРОНИЯ».  
+      Это пространство для текстов, которые не обязаны быть удобными,
+      правдоподобными или своевременными.
     </p>
 
     <p>
-      Фестиваль проходит в рамках подготовки первого номера журнала.
-      Отобранные работы будут опубликованы онлайн и в печатной версии.
+      Мы принимаем конкурсные рассказы, экспериментальные формы,
+      гибриды прозы и эссе.  
+      Лучшие работы будут опубликованы в номере журнала.
+    </p>
+
+    <p>
+      Время — наш основной материал.  
+      Песок уже сыпется.
     </p>
   </section>
 
-  <!-- PINNED -->
+  <!-- === PINNED === -->
   <section class="festival-pinned">
-    <h2>Закреплённые</h2>
-    <div id="pinnedThreads"></div>
+    <h2>ЗАКРЕПЛЁННЫЕ ТЕМЫ</h2>
+
+    <div class="forum-grid">
+      <div class="forum-tile glass muted">
+        <div class="tile-kicker">Информация</div>
+        <h3>Правила фестиваля</h3>
+      </div>
+
+      <div class="forum-tile glass muted">
+        <div class="tile-kicker">Информация</div>
+        <h3>Как подать работу</h3>
+      </div>
+    </div>
   </section>
 
-  <!-- SUBMISSIONS -->
+  <!-- === SUBMISSIONS === -->
   <section class="festival-submissions">
-    <h2>Конкурсные работы</h2>
-    <div id="threads"></div>
+    <h2>КОНКУРСНЫЕ РАБОТЫ</h2>
+
+    <div class="forum-grid">
+      <!-- здесь потом будут темы -->
+      <div class="forum-tile glass muted">
+        <p>Работы появятся после начала приёма.</p>
+      </div>
+    </div>
   </section>
 
 </main>
 
-<script type="module">
-  import {
-    supabase,
-    currentUser,
-    listThreads
-  } from "./forum.js";
-
-  // ===== НАСТРОЙКИ ФЕСТИВАЛЯ =====
-
-  const FESTIVAL_DEADLINE = new Date("2026-03-01T23:59:59Z");
-
-  const MODERATOR_EMAILS = [
-    "elismolha@gmail.com"
-    // позже вынесем в БД
-  ];
-
-  // ===== COUNTDOWN =====
-
-  const countdownEl = document.getElementById("countdown");
+<!-- === COUNTDOWN SCRIPT === -->
+<script>
+  // ДЕДЛАЙН — поменяй дату
+  const deadline = new Date("2026-03-01T23:59:59Z").getTime();
 
   function updateCountdown() {
-    const diff = FESTIVAL_DEADLINE - new Date();
-    if (diff <= 0) {
-      countdownEl.textContent = "приём завершён";
-      return;
-    }
+    const now = new Date().getTime();
+    let diff = deadline - now;
+    if (diff < 0) diff = 0;
 
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+    const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const m = Math.floor((diff / (1000 * 60)) % 60);
+    const s = Math.floor((diff / 1000) % 60);
 
-    countdownEl.textContent =
-      `${days}д ${hours}ч ${minutes}м`;
+    days.textContent = String(d).padStart(2, "0");
+    hours.textContent = String(h).padStart(2, "0");
+    minutes.textContent = String(m).padStart(2, "0");
+    seconds.textContent = String(s).padStart(2, "0");
   }
 
-  setInterval(updateCountdown, 60000);
   updateCountdown();
-
-  // ===== THREADS =====
-
-  const pinnedBox = document.getElementById("pinnedThreads");
-  const threadsBox = document.getElementById("threads");
-
-  async function loadFestivalThreads() {
-    const threads = await listThreads({ section: "festivals" });
-
-    const pinned = threads.filter(t =>
-      t.title.toLowerCase().startsWith("[закреп]")
-    );
-
-    const normal = threads.filter(t =>
-      !t.title.toLowerCase().startsWith("[закреп]")
-    );
-
-    pinnedBox.innerHTML = pinned.map(renderThread).join("");
-    threadsBox.innerHTML = normal.map(renderThread).join("");
-  }
-
-  function renderThread(t) {
-    return `
-      <div class="card">
-        <a href="thread.html?id=${t.id}">
-          <strong>${t.title}</strong>
-        </a>
-        <div class="muted">
-          ${new Date(t.created_at).toLocaleString()}
-        </div>
-      </div>
-    `;
-  }
-
-  loadFestivalThreads();
-
-  // ===== MODERATION NOTE =====
-
-  const user = await currentUser();
-  if (!user || !MODERATOR_EMAILS.includes(user.email)) {
-    // обычные пользователи просто читают
-  }
+  setInterval(updateCountdown, 1000);
 </script>
 
 </body>
