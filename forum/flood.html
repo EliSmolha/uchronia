@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>УХРОНИЯ — Флудилище</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/forum/forum.css">
+  <link rel="stylesheet" href="/forum/flood.css">
+</head>
+
+<body>
+
+  <!-- PARTICLES BACKGROUND (общий для форума) -->
+  <div id="particles-bg"></div>
+
+  <!-- NAV -->
+  <nav class="forum-nav" aria-label="Навигация форума">
+    <a href="/" class="nav-root">ЖУРНАЛ</a>
+    <div class="nav-section">
+      <a href="/forum/index.html">ЗАГЛАВИЕ</a>
+      <a href="/forum/festival.html">ФЕСТИВАЛЬ</a>
+      <a href="/forum/section.html?type=duels">ДУЭЛИ</a>
+      <a href="/forum/flood.html" class="active">ФЛУДИЛИЩЕ</a>
+      <a href="/forum/section.html?type=rules">ПРАВИЛА</a>
+    </div>
+  </nav>
+
+  <main class="forum-main flood-layout">
+
+    <!-- LEFT: FIRE -->
+    <section class="flood-fire glass">
+      <div class="fire-head">
+        <div class="tile-kicker">Общий огонь</div>
+        <h2 class="fire-title">КОСТЁР</h2>
+      </div>
+
+      <div id="campfire" class="campfire"></div>
+
+      <div class="fire-controls">
+        <button id="addWoodBtn" class="btn">Подбросить веток</button>
+        <button id="igniteBtn" class="btn btn-danger" style="display:none;">Зажечь</button>
+
+        <div class="fuel">
+          <div class="fuel-label">Топливо</div>
+          <div class="fuel-bar">
+            <div id="fuelLevel" class="fuel-level"></div>
+          </div>
+        </div>
+
+        <div id="fireStatus" class="muted fire-status">горит</div>
+      </div>
+    </section>
+
+    <!-- RIGHT: CHAT -->
+    <section class="flood-chat glass">
+      <div class="chat-top">
+        <div class="chat-rooms" id="rooms"></div>
+        <button id="newRoomBtn" class="btn btn-ghost">Новая комната</button>
+      </div>
+
+      <div class="chat-messages" id="messages"></div>
+
+      <div class="chat-compose">
+        <button id="emojiBtn" class="btn btn-ghost" type="button">🙂</button>
+        <input id="msgInput" class="chat-input" type="text" placeholder="Сообщение…" autocomplete="off">
+        <button id="sendBtn" class="btn" type="button">Отправить</button>
+      </div>
+
+      <!-- emoji picker (скрытый) -->
+      <div id="emojiWrap" class="emoji-wrap" style="display:none;">
+        <emoji-picker></emoji-picker>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- particles.js -->
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+  <script>
+    particlesJS("particles-bg", {
+      "particles": {
+        "number": {"value": 260, "density": {"enable": true, "value_area": 900}},
+        "color": {"value": "#ffffff"},
+        "shape": {"type": "circle"},
+        "opacity": {"value": 0.4, "random": true},
+        "size": {"value": 4, "random": true},
+        "line_linked": {"enable": false},
+        "move": {"enable": true, "speed": 0.6, "direction": "bottom", "out_mode": "out"}
+      },
+      "interactivity": {
+        "events": {"onhover": {"enable": true, "mode": "repulse"}, "resize": true},
+        "modes": {"repulse": {"distance": 120, "duration": 0.4}}
+      },
+      "retina_detect": true
+    });
+  </script>
+
+  <!-- lottie for campfire -->
+  <script src="https://unpkg.com/lottie-web@5.12.2/build/player/lottie.min.js"></script>
+
+  <!-- emoji picker -->
+  <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
+
+  <!-- main logic -->
+  <script type="module" src="/forum/flood.js"></script>
+</body>
+</html>
