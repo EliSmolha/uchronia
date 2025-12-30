@@ -5,15 +5,14 @@
   <title>УХРОНИЯ — Форум</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <link rel="stylesheet" href="/style.css"><!-- твой основной стиль -->
-  <link rel="stylesheet" href="/forum/forum.css"><!-- позже вынесем -->
-
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/forum/forum.css">
 </head>
 
 <body>
 
 <!-- === SIDE NAV (ТОТ ЖЕ, ЧТО НА САЙТЕ) === -->
-<nav class="side-nav">
+<nav class="side-nav" aria-label="Навигация">
   <a href="/">Обложка</a>
   <a href="/#manifest">Манифест</a>
   <a href="/#authors">Авторам</a>
@@ -26,15 +25,28 @@
 
   <!-- === TOP BAR === -->
   <div class="forum-topbar">
-    <div id="userStatus" class="muted"></div>
-    <div class="forum-actions">
-      <a href="profile.html" class="btn">Профиль</a>
-      <button id="logout" class="btn">Выйти</button>
+
+    <!-- Guest: login box -->
+    <div id="loginBox" class="login-box" aria-label="Вход" style="display:none;">
+      <input id="email" type="email" placeholder="email" autocomplete="email">
+      <input id="password" type="password" placeholder="пароль" autocomplete="current-password">
+      <button id="loginBtn" class="btn" type="button">Войти</button>
+      <a id="registerLink" href="/forum/auth.html" class="muted" style="text-decoration:none;">Регистрация</a>
     </div>
+
+    <!-- Authed: user box -->
+    <div id="userBox" class="user-box" style="display:none;">
+      <div class="muted" id="userStatus"></div>
+      <div class="forum-actions">
+        <a id="profileBtn" href="profile.html" class="btn">Профиль</a>
+        <button id="logoutBtn" class="btn" type="button">Выйти</button>
+      </div>
+    </div>
+
   </div>
 
   <!-- === SECTIONS === -->
-  <section class="forum-sections">
+  <section class="forum-sections" aria-label="Разделы форума">
 
     <a class="forum-section" href="section.html?type=festivals">
       <h2>ЛИТЕРАТУРНЫЕ ФЕСТИВАЛИ</h2>
@@ -61,32 +73,67 @@
 </main>
 
 <script type="module">
-  import { supabase, signOut } from "./forum.js";
+  import { supabase, signIn, signOut } from "./forum.js";
+
+  const loginBox = document.getElementById("loginBox");
+  const userBox = document.getElementById("userBox");
 
   const userStatus = document.getElementById("userStatus");
-  const logoutBtn = document.getElementById("logout");
+  const emailInput = document.getElementById("email");
+  const passwordInput = document.getElementById("password");
 
-  function renderLoggedOut() {
-    userStatus.textContent = "Войдите, чтобы участвовать в форуме";
-    logoutBtn.style.display = "none";
+  const loginBtn = document.getElementById("loginBtn");
+  const logoutBtn = document.getElementById("logoutBtn");
+
+  function renderGuest() {
+    loginBox.style.display = "flex";
+    userBox.style.display = "none";
+    userStatus.textContent = "";
   }
 
-  function renderLoggedIn(user) {
+  function renderUser(user) {
+    loginBox.style.display = "none";
+    userBox.style.display = "flex";
     userStatus.textContent = "Вы вошли как: " + user.email;
-    logoutBtn.style.display = "inline-block";
   }
 
+  // Базовое состояние: гость (пока Supabase восстанавливает сессию)
+  renderGuest();
+
+  // Реактивно обновляем UI при любом изменении авторизации
   supabase.auth.onAuthStateChange((_, session) => {
-    if (session?.user) {
-      renderLoggedIn(session.user);
-    } else {
-      renderLoggedOut();
-    }
+    if (session?.user) renderUser(session.user);
+    else renderGuest();
   });
 
+  // Вход
+  loginBtn.onclick = async () => {
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
+
+    if (!email || !password) {
+      alert("Введите email и пароль.");
+      return;
+    }
+
+    try {
+      await signIn(email, password);
+      emailInput.value = "";
+      passwordInput.value = "";
+      // UI обновится через onAuthStateChange
+    } catch (e) {
+      alert(e.message);
+    }
+  };
+
+  // Выход
   logoutBtn.onclick = async () => {
-    await signOut();
-    location.reload();
+    try {
+      await signOut();
+      // UI обновится через onAuthStateChange
+    } catch (e) {
+      alert(e.message);
+    }
   };
 </script>
 
