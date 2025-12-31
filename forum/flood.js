@@ -1,16 +1,34 @@
 import { supabase } from "./forum.js";
 
-// ---------- AUTH GUARD ----------
+/* ======================================================
+   AUTH + PROFILE
+   ====================================================== */
+
 const { data: authData } = await supabase.auth.getUser();
 const user = authData?.user;
 
 if (!user) {
-  // не залогинен — можно редиректить на auth или просто показать заглушку
   alert("Флудилище доступно только для залогиненных.");
   location.href = "/forum/index.html";
+  throw new Error("Not authenticated");
 }
 
-// ---------- CAMPFIRE (LOTTIE) ----------
+// получаем профиль
+const { data: profile } = await supabase
+  .from("profiles")
+  .select("username, display_name")
+  .eq("id", user.id)
+  .single();
+
+const nickname =
+  profile?.display_name ||
+  profile?.username ||
+  "Аноним";
+
+/* ======================================================
+   CAMPFIRE (LOTTIE)
+   ====================================================== */
+
 const campfireEl = document.getElementById("campfire");
 const fuelLevelEl = document.getElementById("fuelLevel");
 const fireStatusEl = document.getElementById("fireStatus");
@@ -31,8 +49,7 @@ const fire = lottie.loadAnimation({
 function renderFuel() {
   fuelLevelEl.style.width = `${fuel}%`;
 
-  // скорость/яркость зависят от топлива
-  const speed = Math.max(0.15, fuel / 45);
+  const speed = Math.max(0.2, fuel / 40);
   fire.setSpeed(speed);
 
   if (fuel <= 0) {
@@ -43,39 +60,33 @@ function renderFuel() {
   } else {
     fireStatusEl.textContent = "горит";
     igniteBtn.style.display = "none";
-    if (isLit) fire.play();
+    fire.play();
   }
 }
 
 setInterval(() => {
   if (!isLit) return;
-  fuel = Math.max(0, fuel - 0.8); // расход
+  fuel = Math.max(0, fuel - 0.7);
   renderFuel();
 }, 1000);
 
-addWoodBtn.addEventListener("click", async () => {
-  fuel = Math.min(100, fuel + 18);
+addWoodBtn.onclick = () => {
+  fuel = Math.min(100, fuel + 20);
   isLit = true;
-  fire.play();
   renderFuel();
+};
 
-  // позже: можно писать это в БД как общий прогресс костра
-});
-
-igniteBtn.addEventListener("click", async () => {
-  fuel = Math.max(25, fuel);
+igniteBtn.onclick = () => {
+  fuel = Math.max(30, fuel);
   isLit = true;
-  fire.play();
   renderFuel();
-
-  // позже: можно писать это в БД
-});
+};
 
 renderFuel();
 
-// ---------- CHAT (минимальная заглушка UI) ----------
-// На этом шаге мы делаем только интерфейс.
-// Реалтайм и таблицы Supabase подключим следующим шагом.
+/* ======================================================
+   CHAT
+   ====================================================== */
 
 const roomsEl = document.getElementById("rooms");
 const messagesEl = document.getElementById("messages");
@@ -83,70 +94,128 @@ const msgInput = document.getElementById("msgInput");
 const sendBtn = document.getElementById("sendBtn");
 const newRoomBtn = document.getElementById("newRoomBtn");
 
-// временные комнаты (потом загрузим из БД)
 let rooms = [
   { id: "main", name: "ОБЩАЯ" },
-  { id: "meta", name: "МЕТА" },
-  { id: "night", name: "НОЧЬ" },
+  { id: "meta", name: "МЕТА" }
 ];
 
-let currentRoom = rooms[0].id;
+let currentRoom = "main";
+
+/* ---------- ROOMS ---------- */
 
 function renderRooms() {
   roomsEl.innerHTML = "";
-  rooms.forEach((r) => {
-    const b = document.createElement("button");
-    b.className = "room-btn" + (r.id === currentRoom ? " active" : "");
-    b.textContent = r.name;
-    b.onclick = () => {
+  rooms.forEach(r => {
+    const btn = document.createElement("button");
+    btn.className = "room-btn" + (r.id === currentRoom ? " active" : "");
+    btn.textContent = r.name;
+    btn.onclick = () => {
       currentRoom = r.id;
       renderRooms();
-      messagesEl.innerHTML = ""; // потом: подгружать сообщения по комнате
+      loadMessages();
     };
-    roomsEl.appendChild(b);
+    roomsEl.appendChild(btn);
   });
 }
 
-function addLocalMessage(text) {
-  const wrap = document.createElement("div");
-  wrap.className = "msg";
-  wrap.innerHTML = `
-    <div class="meta">${new Date().toLocaleTimeString()} · ${user.email}</div>
-    <div class="text">${text}</div>
-  `;
-  messagesEl.appendChild(wrap);
+renderRooms();
+
+/* ---------- LOAD MESSAGES (24 HOURS) ---------- */
+
+async function loadMessages() {
+  messagesEl.innerHTML = "";
+
+  const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+
+  const { data, error } = await supabase
+    .from("flood_messages")
+    .select(`
+      text,
+      created_at,
+      profiles:profiles!flood_messages_user_id_fkey (
+        username,
+        display_name
+      )
+    `)
+    .eq("room", currentRoom)
+    .gte("created_at", since)
+    .order("created_at", { ascending: true });
+
+  if (error) {
+    console.error(error);
+    return;
+  }
+
+  data.forEach(msg => {
+    renderMessage(
+      msg.profiles?.display_name ||
+      msg.profiles?.username ||
+      "Кто-то",
+      msg.text,
+      msg.created_at
+    );
+  });
+
   messagesEl.scrollTop = messagesEl.scrollHeight;
 }
 
-sendBtn.onclick = () => {
+/* ---------- RENDER MESSAGE ---------- */
+
+function renderMessage(author, text, time) {
+  const wrap = document.createElement("div");
+  wrap.className = "msg";
+  wrap.innerHTML = `
+    <div class="meta">${new Date(time).toLocaleTimeString()} · ${author}</div>
+    <div class="text">${text}</div>
+  `;
+  messagesEl.appendChild(wrap);
+}
+
+/* ---------- SEND MESSAGE ---------- */
+
+sendBtn.onclick = async () => {
   const text = msgInput.value.trim();
   if (!text) return;
-  addLocalMessage(text);
+
+  await supabase.from("flood_messages").insert({
+    room: currentRoom,
+    user_id: user.id,
+    text
+  });
+
   msgInput.value = "";
+  loadMessages();
 };
 
-newRoomBtn.onclick = () => {
-  const name = prompt("Название комнаты?");
-  if (!name) return;
-  const id = crypto.randomUUID();
-  rooms.push({ id, name: name.toUpperCase() });
-  currentRoom = id;
-  renderRooms();
-  messagesEl.innerHTML = "";
-};
+msgInput.addEventListener("keydown", e => {
+  if (e.key === "Enter") sendBtn.click();
+});
 
-renderRooms();
+/* ---------- CLEANUP OLD MESSAGES (CLIENT-SIDE) ---------- */
 
-// ---------- EMOJI PICKER ----------
+setInterval(async () => {
+  const cutoff = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+  await supabase
+    .from("flood_messages")
+    .delete()
+    .lt("created_at", cutoff);
+}, 10 * 60 * 1000); // каждые 10 минут
+
+/* ---------- EMOJI ---------- */
+
 const emojiBtn = document.getElementById("emojiBtn");
 const emojiWrap = document.getElementById("emojiWrap");
 const picker = emojiWrap.querySelector("emoji-picker");
 
 emojiBtn.onclick = () => {
-  emojiWrap.style.display = emojiWrap.style.display === "none" ? "block" : "none";
+  emojiWrap.style.display =
+    emojiWrap.style.display === "none" ? "block" : "none";
 };
 
-picker.addEventListener("emoji-click", (e) => {
+picker.addEventListener("emoji-click", e => {
   msgInput.value += e.detail.unicode;
   msgInput.focus();
 });
+
+/* ---------- INIT ---------- */
+loadMessages();
