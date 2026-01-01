@@ -1,16 +1,17 @@
-/* ================================
+/* ======================================================
    LAYOUT
-   ================================ */
+   ====================================================== */
 
 .flood-layout {
   display: grid;
   grid-template-columns: 420px 1fr;
   gap: 3rem;
+  align-items: start;
 }
 
-/* ================================
+/* ======================================================
    LEFT: CAMPFIRE
-   ================================ */
+   ====================================================== */
 
 .flood-fire {
   padding: 2.5rem;
@@ -31,31 +32,34 @@
   overflow: hidden;
 }
 
-/* ================================
-   LOGS (ВЕТКИ) — КОРИЧНЕВЫЕ
-   ================================ */
+/* ======================================================
+   LOGS — ВЕТКИ (НИЗ, КУЧЕЙ)
+   ====================================================== */
 
 .fire-logs {
   position: absolute;
-  bottom: 16px;
-  left: 0;
-  right: 0;
-  display: flex;
-  justify-content: center;
-  gap: 1.4rem;
+  inset: 0;
+  pointer-events: none;
+}
+
+.fire-logs span {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform-origin: center;
   font-size: 0.75rem;
   letter-spacing: 0.18em;
-  color: #8b5a2b; /* дерево */
+  color: #8b5a2b;
   opacity: 0.9;
-  pointer-events: none;
+  white-space: nowrap;
   text-shadow:
     0 0 4px rgba(0,0,0,0.6),
     0 0 10px rgba(80,40,10,0.4);
 }
 
-/* ================================
+/* ======================================================
    FIRE / SMOKE / SPARK LAYERS
-   ================================ */
+   ====================================================== */
 
 .fire-layer,
 .smoke-layer,
@@ -65,9 +69,9 @@
   pointer-events: none;
 }
 
-/* ================================
+/* ======================================================
    FIRE WORDS — «ОГОНЬ»
-   ================================ */
+   ====================================================== */
 
 .fire-word {
   position: absolute;
@@ -82,24 +86,26 @@
     0 0 14px rgba(255,80,20,0.6);
 }
 
-/* движение вверх + дрожание */
 @keyframes fire-float {
   0% {
-    transform: translate(0, 0) scale(0.8);
+    transform: translate(0, 0) scale(0.8) rotate(var(--rot, 0deg));
     opacity: 0;
   }
   20% {
     opacity: 1;
   }
   100% {
-    transform: translate(var(--dx, 0px), -140px) scale(1.4);
+    transform:
+      translate(var(--dx, 0px), -160px)
+      scale(1.4)
+      rotate(var(--rot, 0deg));
     opacity: 0;
   }
 }
 
-/* ================================
+/* ======================================================
    SMOKE WORDS — «ДЫМ»
-   ================================ */
+   ====================================================== */
 
 .smoke-word {
   position: absolute;
@@ -120,22 +126,22 @@
     opacity: 0.6;
   }
   100% {
-    transform: translate(0, -200px) scale(1.2);
+    transform: translate(0, -220px) scale(1.2);
     opacity: 0;
   }
 }
 
-/* ================================
-   SPARKS — ИСКРЫ
-   ================================ */
+/* ======================================================
+   SPARKS — ИСКРЫ (БЕЗ random() В CSS)
+   ====================================================== */
 
 .spark {
   position: absolute;
   bottom: 45px;
   font-size: 0.6rem;
   color: #ffd27d;
-  animation: spark-fly 1.6s linear forwards;
   opacity: 0.8;
+  animation: spark-fly var(--dur, 1.6s) linear forwards;
 }
 
 @keyframes spark-fly {
@@ -144,17 +150,14 @@
     opacity: 1;
   }
   to {
-    transform: translate(
-      calc(-40px + 80px * random()),
-      -120px
-    );
+    transform: translate(var(--dx, 0px), -120px);
     opacity: 0;
   }
 }
 
-/* ================================
+/* ======================================================
    FIRE CONTROLS
-   ================================ */
+   ====================================================== */
 
 .fire-controls {
   margin-top: 1.6rem;
@@ -189,7 +192,9 @@
   font-size: 0.85rem;
 }
 
-/* ===== CAMPFIRE ACTION LOG ===== */
+/* ======================================================
+   CAMPFIRE ACTION LOG
+   ====================================================== */
 
 .fire-log {
   margin-top: 1.4rem;
@@ -210,7 +215,7 @@
   padding: 0;
   margin: 0;
   display: grid;
-  gap: 0.35rem;
+  gap: 0.4rem;
   max-height: 160px;
   overflow: hidden;
 }
@@ -218,24 +223,99 @@
 .fire-log-list li {
   font-size: 0.75rem;
   color: #aaa;
-  line-height: 1.4;
+  line-height: 1.45;
 }
 
 .fire-log-list b {
-  color: #b43a3a; /* урониевский красный */
+  color: #b43a3a;
   font-weight: normal;
 }
 
+/* ======================================================
+   RIGHT: CHAT — ПРИВЕДЁН В ПОРЯДОК
+   ====================================================== */
 
-/* ================================
+.flood-chat {
+  padding: 2.5rem;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 1.2rem;
+}
+
+.chat-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.chat-rooms {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.chat-messages {
+  padding: 1rem;
+  background: rgba(0,0,0,0.25);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 12px;
+  overflow-y: auto;
+}
+
+/* ===== MESSAGE ===== */
+
+.msg {
+  margin-bottom: 0.9rem;
+}
+
+.msg .meta {
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  color: #777;
+  margin-bottom: 0.2rem;
+}
+
+.msg .text {
+  font-size: 0.85rem;
+  line-height: 1.55;
+  color: #ddd;
+}
+
+/* ===== COMPOSE ===== */
+
+.chat-compose {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 0.6rem;
+  align-items: center;
+}
+
+.chat-input {
+  width: 100%;
+  padding: 0.55rem 0.7rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(0,0,0,0.35);
+  color: #eee;
+}
+
+.chat-input::placeholder {
+  color: #777;
+}
+
+/* ======================================================
    MOBILE
-   ================================ */
+   ====================================================== */
 
 @media (max-width: 900px) {
   .flood-layout {
     grid-template-columns: 1fr;
   }
+
   .campfire {
     height: 260px;
+  }
+
+  .flood-chat {
+    padding: 1.8rem;
   }
 }
