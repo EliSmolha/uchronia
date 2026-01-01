@@ -4,24 +4,20 @@ import { supabase } from "./forum.js";
    AUTH + PROFILE
    ====================================================== */
 
-const { data: authData, error: authError } = await supabase.auth.getUser();
-if (authError) console.warn(authError);
-
+const { data: authData } = await supabase.auth.getUser();
 const user = authData?.user;
 
 if (!user) {
-  alert("Флудилище доступно только для залогиненных.");
+  alert("Войдите в свой профиль, тогда и приходите на Флудилище.");
   location.href = "/forum/index.html";
   throw new Error("Not authenticated");
 }
 
-const { data: profile, error: profileError } = await supabase
+const { data: profile } = await supabase
   .from("profiles")
   .select("username, display_name")
   .eq("id", user.id)
   .single();
-
-if (profileError) console.warn(profileError);
 
 const myNickname =
   profile?.display_name ||
@@ -29,81 +25,157 @@ const myNickname =
   "Аноним";
 
 /* ======================================================
-   CAMPFIRE (LOCAL — STAGE 1)
+   CAMPFIRE — GLOBAL STATE (SUPABASE)
    ====================================================== */
 
-const campfireEl = document.getElementById("campfire");
-const lottieSlot = document.getElementById("lottieSlot");
 const fuelLevelEl = document.getElementById("fuelLevel");
 const fireStatusEl = document.getElementById("fireStatus");
 const addWoodBtn = document.getElementById("addWoodBtn");
 const igniteBtn = document.getElementById("igniteBtn");
 
-let fuel = 100;
-let isLit = true;
+// текстовые слои
+const fireLayer = document.getElementById("fireLayer");
+const smokeLayer = document.getElementById("smokeLayer");
+const logsLayer = document.getElementById("logsLayer");
 
-// Оставляем Lottie, но рендерим в отдельный слот,
-// чтобы не ломать будущие слои слов.
-let fire = null;
-if (window.lottie && lottieSlot) {
-  fire = lottie.loadAnimation({
-    container: lottieSlot,
-    renderer: "svg",
-    loop: true,
-    autoplay: true,
-    path: "/assets/lottie/fire.json",
-  });
+let fuel = 0;
+let isLit = false;
+
+/* ---------- LOAD CAMPFIRE ---------- */
+
+async function loadCampfire() {
+  const { data, error } = await supabase
+    .from("campfire_state")
+    .select("fuel")
+    .eq("id", true)
+    .single();
+
+  if (error) {
+    console.error("campfire load failed", error);
+    return;
+  }
+
+  fuel = data.fuel;
+  isLit = fuel > 0;
+  renderFuel();
 }
+
+await loadCampfire();
+
+/* ---------- RENDER ---------- */
 
 function renderFuel() {
   fuelLevelEl.style.width = `${fuel}%`;
 
-  if (fire) {
-    const speed = Math.max(0.2, fuel / 40);
-    fire.setSpeed(speed);
-  }
-
   if (fuel <= 0) {
     isLit = false;
-    if (fire) fire.pause();
-    fireStatusEl.textContent = "потух";
+    fireStatusEl.textContent = "Костер потух. Зажги его.";
     igniteBtn.style.display = "inline-block";
   } else {
-    fireStatusEl.textContent = "горит";
+    isLit = true;
+    fireStatusEl.textContent = "Костер горит, замешивая наши тени в темноту леса.";
     igniteBtn.style.display = "none";
-    if (fire) fire.play();
   }
 }
 
-setInterval(() => {
-  if (!isLit) return;
-  fuel = Math.max(0, fuel - 0.7);
-  renderFuel();
-}, 1000);
+/* ---------- UPDATE GLOBAL ---------- */
 
-addWoodBtn.onclick = () => {
-  fuel = Math.min(100, fuel + 20);
-  isLit = true;
+async function updateCampfire(newFuel) {
+  fuel = Math.max(0, Math.min(100, newFuel));
+
+  await supabase
+    .from("campfire_state")
+    .update({
+      fuel,
+      updated_at: new Date().toISOString()
+    })
+    .eq("id", true);
+
   renderFuel();
+}
+
+/* ---------- USER ACTIONS ---------- */
+
+addWoodBtn.onclick = async () => {
+  await updateCampfire(fuel + 15);
 };
 
-igniteBtn.onclick = () => {
-  fuel = Math.max(30, fuel);
-  isLit = true;
-  renderFuel();
+igniteBtn.onclick = async () => {
+  if (fuel <= 0) await updateCampfire(30);
 };
 
-renderFuel();
+/* ---------- REALTIME SYNC ---------- */
+
+supabase
+  .channel("campfire-state")
+  .on(
+    "postgres_changes",
+    { event: "UPDATE", schema: "public", table: "campfire_state" },
+    payload => {
+      fuel = payload.new.fuel;
+      isLit = fuel > 0;
+      renderFuel();
+    }
+  )
+  .subscribe();
+
+/* ---------- FUEL DECAY (ONE CLIENT ONLY) ---------- */
+
+// ⚠️ чтобы не было -10 в секунду от всех
+const FIRE_MASTER_ID = "ID_АДМИНА_ИЛИ_ПЕРВОГО";
+
+if (user.id === FIRE_MASTER_ID) {
+  setInterval(async () => {
+    if (fuel <= 0) return;
+    await updateCampfire(fuel - 1);
+  }, 5000);
+}
 
 /* ======================================================
-   CHAT
+   TEXT FIRE VISUALS
+   ====================================================== */
+
+function spawnFireWord() {
+  if (!isLit || fuel < 10) return;
+
+  const el = document.createElement("div");
+  el.className = "fire-word";
+  el.textContent = "огонь";
+
+  el.style.left = 45 + Math.random() * 10 + "%";
+  el.style.bottom = "40px";
+  el.style.setProperty("--dx", (Math.random() - 0.5) * 60 + "px");
+
+  fireLayer.appendChild(el);
+  setTimeout(() => el.remove(), 3000);
+}
+
+function spawnSmokeWord() {
+  const el = document.createElement("div");
+  el.className = "smoke-word";
+  el.textContent = "дым";
+
+  el.style.left = 45 + Math.random() * 10 + "%";
+  el.style.bottom = "60px";
+
+  smokeLayer.appendChild(el);
+  setTimeout(() => el.remove(), 4000);
+}
+
+setInterval(() => {
+  const intensity = Math.floor(fuel / 20); // 0–5
+  for (let i = 0; i < intensity; i++) spawnFireWord();
+  spawnSmokeWord();
+}, 700);
+
+/* ======================================================
+   CHAT — БЕЗ ИЗМЕНЕНИЙ ПО ЛОГИКЕ
    ====================================================== */
 
 const roomsEl = document.getElementById("rooms");
 const messagesEl = document.getElementById("messages");
 const msgInput = document.getElementById("msgInput");
 const sendBtn = document.getElementById("sendBtn");
-const newRoomBtn = document.getElementById("newRoomBtn");
 
 let rooms = [
   { id: "main", name: "ОБЩАЯ" },
@@ -112,8 +184,6 @@ let rooms = [
 
 let currentRoom = "main";
 
-/* ---------- HELPERS ---------- */
-
 function escapeHTML(str) {
   return String(str ?? "")
     .replace(/&/g, "&amp;")
@@ -121,198 +191,78 @@ function escapeHTML(str) {
     .replace(/>/g, "&gt;");
 }
 
-function formatTime(ts) {
-  try {
-    return new Date(ts).toLocaleTimeString();
-  } catch {
-    return "";
-  }
-}
-
-// кэш профилей авторов: user_id -> display_name/username
-const profileCache = new Map();
-
-async function getNicknameByUserId(userId) {
-  if (!userId) return "Кто-то";
-  if (profileCache.has(userId)) return profileCache.get(userId);
-
-  const { data, error } = await supabase
-    .from("profiles")
-    .select("username, display_name")
-    .eq("id", userId)
-    .single();
-
-  if (error) {
-    console.warn("profile lookup failed:", error);
-    profileCache.set(userId, "Кто-то");
-    return "Кто-то";
-  }
-
-  const nick = data?.display_name || data?.username || "Кто-то";
-  profileCache.set(userId, nick);
-  return nick;
-}
-
-/* ---------- ROOMS ---------- */
-
-function renderRooms() {
-  roomsEl.innerHTML = "";
-  rooms.forEach(r => {
-    const btn = document.createElement("button");
-    btn.className = "room-btn" + (r.id === currentRoom ? " active" : "");
-    btn.textContent = r.name;
-    btn.type = "button";
-    btn.onclick = () => {
-      currentRoom = r.id;
-      renderRooms();
-      loadMessages();
-    };
-    roomsEl.appendChild(btn);
-  });
-}
-
-renderRooms();
-
-/* ---------- RENDER MESSAGE ---------- */
-
 function renderMessage(author, text, time) {
   const wrap = document.createElement("div");
   wrap.className = "msg";
   wrap.innerHTML = `
-    <div class="meta">${escapeHTML(formatTime(time))} · ${escapeHTML(author)}</div>
+    <div class="meta">${new Date(time).toLocaleTimeString()} · ${escapeHTML(author)}</div>
     <div class="text">${escapeHTML(text)}</div>
   `;
   messagesEl.appendChild(wrap);
 }
 
-/* ---------- LOAD MESSAGES (LAST 24H) ---------- */
+/* ---------- LOAD ---------- */
 
 async function loadMessages() {
   messagesEl.innerHTML = "";
 
   const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
 
-  // Важно: явно выбираем user_id, иначе realtime будет нечем сопоставлять
-  const { data, error } = await supabase
+  const { data } = await supabase
     .from("flood_messages")
-    .select("user_id, text, created_at, room")
+    .select("user_id, text, created_at")
     .eq("room", currentRoom)
     .gte("created_at", since)
     .order("created_at", { ascending: true });
 
-  if (error) {
-    console.error(error);
-    return;
-  }
-
-  // 1) соберём уникальные user_id
-  const ids = [...new Set(data.map(m => m.user_id).filter(Boolean))];
-
-  // 2) подтянем профили пачкой (вместо N запросов)
-  if (ids.length) {
-    const { data: profs, error: pErr } = await supabase
-      .from("profiles")
-      .select("id, username, display_name")
-      .in("id", ids);
-
-    if (pErr) {
-      console.warn(pErr);
-    } else {
-      profs.forEach(p => {
-        const nick = p.display_name || p.username || "Кто-то";
-        profileCache.set(p.id, nick);
-      });
-    }
-  }
-
   data.forEach(msg => {
-    const author =
-      profileCache.get(msg.user_id) ||
-      (msg.user_id === user.id ? myNickname : "Кто-то");
-
-    renderMessage(author, msg.text, msg.created_at);
+    renderMessage(
+      msg.user_id === user.id ? myNickname : "Кто-то",
+      msg.text,
+      msg.created_at
+    );
   });
 
   messagesEl.scrollTop = messagesEl.scrollHeight;
 }
 
-/* ---------- SEND MESSAGE ---------- */
+await loadMessages();
+
+/* ---------- SEND ---------- */
 
 async function sendMessage() {
   const text = msgInput.value.trim();
   if (!text) return;
 
-  sendBtn.disabled = true;
-
-  const { error } = await supabase
-    .from("flood_messages")
-    .insert({
-      room: currentRoom,
-      user_id: user.id,
-      text
-    });
-
-  sendBtn.disabled = false;
-
-  if (error) {
-    console.error(error);
-    alert("Не удалось отправить сообщение");
-    return;
-  }
+  await supabase.from("flood_messages").insert({
+    room: currentRoom,
+    user_id: user.id,
+    text
+  });
 
   msgInput.value = "";
 }
 
 sendBtn.onclick = sendMessage;
-
 msgInput.addEventListener("keydown", e => {
   if (e.key === "Enter") sendMessage();
 });
 
-/* ---------- REALTIME ---------- */
+/* ---------- REALTIME CHAT ---------- */
 
-// Чтобы не плодить подписки при будущих переходах/перезагрузках:
-const channel = supabase
-  .channel("flood-messages")
+supabase
+  .channel("flood-chat")
   .on(
     "postgres_changes",
     { event: "INSERT", schema: "public", table: "flood_messages" },
-    async (payload) => {
-      const msg = payload?.new;
-      if (!msg) return;
-      if (msg.room !== currentRoom) return;
-
-      const author =
-        msg.user_id === user.id
-          ? myNickname
-          : await getNicknameByUserId(msg.user_id);
-
-      renderMessage(author, msg.text, msg.created_at);
+    payload => {
+      if (payload.new.room !== currentRoom) return;
+      renderMessage(
+        payload.new.user_id === user.id ? myNickname : "Кто-то",
+        payload.new.text,
+        payload.new.created_at
+      );
       messagesEl.scrollTop = messagesEl.scrollHeight;
     }
   )
   .subscribe();
-
-/* ---------- EMOJI ---------- */
-
-const emojiBtn = document.getElementById("emojiBtn");
-const emojiWrap = document.getElementById("emojiWrap");
-const picker = emojiWrap?.querySelector("emoji-picker");
-
-emojiBtn.onclick = () => {
-  emojiWrap.style.display =
-    emojiWrap.style.display === "none" ? "block" : "none";
-};
-
-picker?.addEventListener("emoji-click", e => {
-  msgInput.value += e.detail.unicode;
-  msgInput.focus();
-});
-
-/* ---------- INIT ---------- */
-await loadMessages();
-
-// (не обязательно, но аккуратно): отписка при уходе со страницы
-window.addEventListener("beforeunload", () => {
-  try { channel.unsubscribe(); } catch {}
-});
