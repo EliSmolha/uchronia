@@ -36,11 +36,25 @@
         <h2 class="fire-title">КОСТЁР</h2>
       </div>
 
-      <div id="campfire" class="campfire"></div>
+      <!-- CAMPFIRE STAGE 1 (контейнер + слои) -->
+      <div id="campfire" class="campfire" aria-label="Костёр">
+        <div class="fire-logs" aria-hidden="true">
+          <span>ветки</span>
+          <span>ветки</span>
+          <span>ветки</span>
+        </div>
+
+        <div class="fire-layer" id="fireLayer" aria-hidden="true"></div>
+        <div class="spark-layer" id="sparkLayer" aria-hidden="true"></div>
+        <div class="smoke-layer" id="smokeLayer" aria-hidden="true"></div>
+
+        <!-- Если оставляешь Lottie, он будет добавлен внутрь сюда -->
+        <div id="lottieSlot" class="lottie-slot" aria-hidden="true"></div>
+      </div>
 
       <div class="fire-controls">
-        <button id="addWoodBtn" class="btn">Подбросить веток</button>
-        <button id="igniteBtn" class="btn btn-danger" style="display:none;">Зажечь</button>
+        <button id="addWoodBtn" class="btn" type="button">Подбросить веток</button>
+        <button id="igniteBtn" class="btn btn-danger" type="button" style="display:none;">Зажечь</button>
 
         <div class="fuel">
           <div class="fuel-label">Топливо</div>
@@ -57,7 +71,7 @@
     <section class="flood-chat glass">
       <div class="chat-top">
         <div class="chat-rooms" id="rooms"></div>
-        <button id="newRoomBtn" class="btn btn-ghost">Новая комната</button>
+        <button id="newRoomBtn" class="btn btn-ghost" type="button">Новая комната</button>
       </div>
 
       <div class="chat-messages" id="messages"></div>
@@ -68,7 +82,6 @@
         <button id="sendBtn" class="btn" type="button">Отправить</button>
       </div>
 
-      <!-- emoji picker (скрытый) -->
       <div id="emojiWrap" class="emoji-wrap" style="display:none;">
         <emoji-picker></emoji-picker>
       </div>
@@ -97,7 +110,7 @@
     });
   </script>
 
-  <!-- lottie for campfire -->
+  <!-- lottie (оставляем, чтобы не ломать) -->
   <script src="https://unpkg.com/lottie-web@5.12.2/build/player/lottie.min.js"></script>
 
   <!-- emoji picker -->
