@@ -13,12 +13,13 @@ if (!user) {
   throw new Error("Not authenticated");
 }
 
-// получаем профиль
-const { data: profile } = await supabase
+const { data: profile, error: profileError } = await supabase
   .from("profiles")
   .select("username, display_name")
   .eq("id", user.id)
   .single();
+
+if (profileError) console.warn(profileError);
 
 const nickname =
   profile?.display_name ||
@@ -26,7 +27,7 @@ const nickname =
   "Аноним";
 
 /* ======================================================
-   CAMPFIRE (LOTTIE)
+   CAMPFIRE (LOCAL — STAGE 1)
    ====================================================== */
 
 const campfireEl = document.getElementById("campfire");
@@ -92,7 +93,6 @@ const roomsEl = document.getElementById("rooms");
 const messagesEl = document.getElementById("messages");
 const msgInput = document.getElementById("msgInput");
 const sendBtn = document.getElementById("sendBtn");
-const newRoomBtn = document.getElementById("newRoomBtn");
 
 let rooms = [
   { id: "main", name: "ОБЩАЯ" },
@@ -100,6 +100,15 @@ let rooms = [
 ];
 
 let currentRoom = "main";
+
+/* ---------- HELPERS ---------- */
+
+function escapeHTML(str) {
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
 
 /* ---------- ROOMS ---------- */
 
@@ -120,7 +129,7 @@ function renderRooms() {
 
 renderRooms();
 
-/* ---------- LOAD MESSAGES (24 HOURS) ---------- */
+/* ---------- LOAD MESSAGES (LAST 24H) ---------- */
 
 async function loadMessages() {
   messagesEl.innerHTML = "";
@@ -132,7 +141,7 @@ async function loadMessages() {
     .select(`
       text,
       created_at,
-      profiles:profiles!flood_messages_user_id_fkey (
+      profiles (
         username,
         display_name
       )
@@ -165,8 +174,8 @@ function renderMessage(author, text, time) {
   const wrap = document.createElement("div");
   wrap.className = "msg";
   wrap.innerHTML = `
-    <div class="meta">${new Date(time).toLocaleTimeString()} · ${author}</div>
-    <div class="text">${text}</div>
+    <div class="meta">${new Date(time).toLocaleTimeString()} · ${escapeHTML(author)}</div>
+    <div class="text">${escapeHTML(text)}</div>
   `;
   messagesEl.appendChild(wrap);
 }
@@ -177,29 +186,51 @@ sendBtn.onclick = async () => {
   const text = msgInput.value.trim();
   if (!text) return;
 
-  await supabase.from("flood_messages").insert({
-    room: currentRoom,
-    user_id: user.id,
-    text
-  });
+  const { error } = await supabase
+    .from("flood_messages")
+    .insert({
+      room: currentRoom,
+      user_id: user.id,
+      text
+    });
+
+  if (error) {
+    console.error(error);
+    alert("Не удалось отправить сообщение");
+    return;
+  }
 
   msgInput.value = "";
-  loadMessages();
 };
 
 msgInput.addEventListener("keydown", e => {
   if (e.key === "Enter") sendBtn.click();
 });
 
-/* ---------- CLEANUP OLD MESSAGES (CLIENT-SIDE) ---------- */
+/* ---------- REALTIME ---------- */
 
-setInterval(async () => {
-  const cutoff = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
-  await supabase
-    .from("flood_messages")
-    .delete()
-    .lt("created_at", cutoff);
-}, 10 * 60 * 1000); // каждые 10 минут
+supabase
+  .channel("flood-messages")
+  .on(
+    "postgres_changes",
+    {
+      event: "INSERT",
+      schema: "public",
+      table: "flood_messages"
+    },
+    payload => {
+      if (payload.new.room !== currentRoom) return;
+
+      renderMessage(
+        nickname,
+        payload.new.text,
+        payload.new.created_at
+      );
+
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+    }
+  )
+  .subscribe();
 
 /* ---------- EMOJI ---------- */
 
