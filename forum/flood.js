@@ -1,312 +1,170 @@
 import { supabase } from "./forum.js";
 
-/* ======================================================
-   AUTH + PROFILE
-   ====================================================== */
+/* ================= AUTH ================= */
 
 const { data: authData } = await supabase.auth.getUser();
 const user = authData?.user;
 
 if (!user) {
-  alert("Войдите в свой профиль, тогда и приходите на Флудилище.");
   location.href = "/forum/index.html";
   throw new Error("Not authenticated");
 }
 
-const { data: profile } = await supabase
-  .from("profiles")
-  .select("username, display_name")
-  .eq("id", user.id)
-  .single();
+const profileCache = new Map();
 
-const myNickname =
-  profile?.display_name ||
-  profile?.username ||
-  "Аноним";
+async function getProfile(uid) {
+  if (profileCache.has(uid)) return profileCache.get(uid);
 
-/* ======================================================
-   CAMPFIRE — GLOBAL STATE (SUPABASE)
-   ====================================================== */
+  const { data } = await supabase
+    .from("profiles")
+    .select("username, display_name, role")
+    .eq("id", uid)
+    .single();
+
+  profileCache.set(uid, data);
+  return data;
+}
+
+const myProfile = await getProfile(user.id);
+const myNick = myProfile.display_name || myProfile.username || "Аноним";
+
+/* ================= CAMPFIRE ================= */
 
 const fuelLevelEl = document.getElementById("fuelLevel");
 const fireStatusEl = document.getElementById("fireStatus");
+const fireLogList = document.getElementById("fireLogList");
 const addWoodBtn = document.getElementById("addWoodBtn");
 const igniteBtn = document.getElementById("igniteBtn");
 
-const fireLayer = document.getElementById("fireLayer");
-const smokeLayer = document.getElementById("smokeLayer");
-
-const fireLogList = document.getElementById("fireLogList");
-
 let fuel = 0;
-let isLit = false;
-
-/* ---------- LOAD CAMPFIRE ---------- */
 
 async function loadCampfire() {
-  const { data, error } = await supabase
+  const { data } = await supabase
     .from("campfire_state")
     .select("fuel")
     .eq("id", true)
     .single();
 
-  if (error) {
-    console.error("campfire load failed", error);
-    return;
-  }
-
   fuel = data.fuel;
-  isLit = fuel > 0;
   renderFuel();
 }
-
-await loadCampfire();
-
-/* ---------- RENDER ---------- */
 
 function renderFuel() {
   fuelLevelEl.style.width = `${fuel}%`;
 
   if (fuel <= 0) {
-    isLit = false;
-    fireStatusEl.textContent = "Костёр потух. Зажги его.";
+    fireStatusEl.textContent = "Костёр потух.";
     igniteBtn.style.display = "inline-block";
+  } else if (fuel < 15) {
+    fireStatusEl.textContent = "Костёр тлеет.";
+    igniteBtn.style.display = "none";
+  } else if (fuel < 60) {
+    fireStatusEl.textContent = "Костёр горит.";
+    igniteBtn.style.display = "none";
   } else {
-    isLit = true;
-    fireStatusEl.textContent =
-      "Костёр горит, замешивая наши тени в темноту леса.";
+    fireStatusEl.textContent = "Костёр пылает.";
     igniteBtn.style.display = "none";
   }
 }
 
-/* ---------- UPDATE GLOBAL ---------- */
-
-async function updateCampfire(newFuel) {
-  fuel = Math.max(0, Math.min(100, newFuel));
-
-  await supabase
-    .from("campfire_state")
-    .update({
-      fuel,
-      updated_at: new Date().toISOString()
-    })
-    .eq("id", true);
-
-  renderFuel();
-}
-
-/* ======================================================
-   CAMPFIRE ACTION LOG
-   ====================================================== */
-
-function renderFireLogItem(text) {
-  const li = document.createElement("li");
-  li.innerHTML = text;
-  fireLogList.prepend(li);
-
-  while (fireLogList.children.length > 10) {
-    fireLogList.removeChild(fireLogList.lastChild);
-  }
-}
-
-async function loadFireLog() {
-  const { data, error } = await supabase
-    .from("campfire_events")
-    .select(`
-      type,
-      created_at,
-      profiles (
-        username,
-        display_name
-      )
-    `)
-    .order("created_at", { ascending: false })
-    .limit(10);
-
-  if (error) {
-    console.warn(error);
-    return;
-  }
-
-  fireLogList.innerHTML = "";
-
-  data.reverse().forEach(ev => {
-    const nick =
-      ev.profiles?.display_name ||
-      ev.profiles?.username ||
-      "Кто-то";
-
-    const text =
-      ev.type === "add_wood"
-        ? `<b>${nick}</b> подбросил веток в костёр`
-        : `<b>${nick}</b> зажёг костёр`;
-
-    renderFireLogItem(text);
-  });
-}
-
-await loadFireLog();
-
-/* ======================================================
-   USER ACTIONS
-   ====================================================== */
+await loadCampfire();
 
 addWoodBtn.onclick = async () => {
-  await updateCampfire(fuel + 15);
-
-  await supabase.from("campfire_events").insert({
-    type: "add_wood",
-    user_id: user.id
-  });
+  const { error } = await supabase.rpc("campfire_add_wood");
+  if (error) console.warn(error);
 };
 
 igniteBtn.onclick = async () => {
-  if (fuel <= 0) {
-    await updateCampfire(30);
-
-    await supabase.from("campfire_events").insert({
-      type: "ignite",
-      user_id: user.id
-    });
-  }
+  const { error } = await supabase.rpc("campfire_ignite");
+  if (error) console.warn(error);
 };
 
-/* ======================================================
-   REALTIME SYNC — CAMPFIRE
-   ====================================================== */
-
 supabase
-  .channel("campfire-state")
+  .channel("campfire_state")
   .on(
     "postgres_changes",
-    { event: "UPDATE", schema: "public", table: "campfire_state" },
+    { event: "UPDATE", table: "campfire_state", schema: "public" },
     payload => {
       fuel = payload.new.fuel;
-      isLit = fuel > 0;
       renderFuel();
     }
   )
   .subscribe();
 
-supabase
-  .channel("campfire-events")
-  .on(
-    "postgres_changes",
-    { event: "INSERT", schema: "public", table: "campfire_events" },
-    async payload => {
-      const ev = payload.new;
-      if (!ev) return;
+/* ================= CAMPFIRE LOG ================= */
 
-      const { data } = await supabase
-        .from("profiles")
-        .select("username, display_name")
-        .eq("id", ev.user_id)
-        .single();
-
-      const nick =
-        data?.display_name ||
-        data?.username ||
-        "Кто-то";
-
-      const text =
-        ev.type === "add_wood"
-          ? `<b>${nick}</b> подбросил веток в костёр`
-          : `<b>${nick}</b> зажёг костёр`;
-
-      renderFireLogItem(text);
-    }
-  )
-  .subscribe();
-
-/* ======================================================
-   TEXT FIRE VISUALS
-   ====================================================== */
-
-function spawnFireWord() {
-  if (!isLit || fuel < 10) return;
-
-  const el = document.createElement("div");
-  el.className = "fire-word";
-  el.textContent = "огонь";
-
-  el.style.left = 45 + Math.random() * 10 + "%";
-  el.style.bottom = "40px";
-  el.style.setProperty("--dx", (Math.random() - 0.5) * 60 + "px");
-
-  fireLayer.appendChild(el);
-  setTimeout(() => el.remove(), 3000);
+function renderFireLog(nick, text) {
+  const li = document.createElement("li");
+  const b = document.createElement("b");
+  b.textContent = nick;
+  li.appendChild(b);
+  li.append(` ${text}`);
+  fireLogList.prepend(li);
+  while (fireLogList.children.length > 10)
+    fireLogList.lastChild.remove();
 }
 
-function spawnSmokeWord() {
-  const el = document.createElement("div");
-  el.className = "smoke-word";
-  el.textContent = "дым";
+async function loadFireLog() {
+  const { data } = await supabase
+    .from("campfire_events")
+    .select("type, user_id, created_at")
+    .order("created_at", { ascending: false })
+    .limit(10);
 
-  el.style.left = 45 + Math.random() * 10 + "%";
-  el.style.bottom = "60px";
-
-  smokeLayer.appendChild(el);
-  setTimeout(() => el.remove(), 4000);
+  fireLogList.innerHTML = "";
+  data.reverse().forEach(async ev => {
+    const p = await getProfile(ev.user_id);
+    renderFireLog(
+      p?.display_name || p?.username || "Кто-то",
+      ev.type === "add_wood"
+        ? "подбросил веток в костёр"
+        : "зажёг костёр"
+    );
+  });
 }
 
-setInterval(() => {
-  const intensity = Math.floor(fuel / 20); // 0–5
-  for (let i = 0; i < intensity; i++) spawnFireWord();
-  spawnSmokeWord();
-}, 700);
+await loadFireLog();
 
-/* ======================================================
-   CHAT — БЕЗ ИЗМЕНЕНИЙ
-   ====================================================== */
+/* ================= CHAT ================= */
 
-const roomsEl = document.getElementById("rooms");
 const messagesEl = document.getElementById("messages");
 const msgInput = document.getElementById("msgInput");
 const sendBtn = document.getElementById("sendBtn");
 
-let rooms = [
-  { id: "main", name: "ОБЩАЯ" },
-  { id: "meta", name: "МЕТА" }
-];
-
-let currentRoom = "main";
-
 function escapeHTML(str) {
-  return String(str ?? "")
+  return String(str)
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;");
 }
 
-function renderMessage(author, text, time) {
-  const wrap = document.createElement("div");
-  wrap.className = "msg";
-  wrap.innerHTML = `
-    <div class="meta">${new Date(time).toLocaleTimeString()} · ${escapeHTML(author)}</div>
+function renderMessage(nick, text, time) {
+  const el = document.createElement("div");
+  el.className = "msg";
+  el.innerHTML = `
+    <div class="meta">${new Date(time).toLocaleTimeString()} · ${escapeHTML(nick)}</div>
     <div class="text">${escapeHTML(text)}</div>
   `;
-  messagesEl.appendChild(wrap);
+  messagesEl.appendChild(el);
 }
 
-async function loadMessages() {
+async function loadMessages(room = "main") {
   messagesEl.innerHTML = "";
-
-  const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
 
   const { data } = await supabase
     .from("flood_messages")
-    .select("user_id, text, created_at")
-    .eq("room", currentRoom)
-    .gte("created_at", since)
-    .order("created_at", { ascending: true });
+    .select("text, created_at, user_id")
+    .eq("room", room)
+    .order("created_at");
 
-  data.forEach(msg => {
+  for (const msg of data) {
+    const p = await getProfile(msg.user_id);
     renderMessage(
-      msg.user_id === user.id ? myNickname : "Кто-то",
+      p?.display_name || p?.username || "Кто-то",
       msg.text,
       msg.created_at
     );
-  });
+  }
 
   messagesEl.scrollTop = messagesEl.scrollHeight;
 }
@@ -317,33 +175,14 @@ async function sendMessage() {
   const text = msgInput.value.trim();
   if (!text) return;
 
-  await supabase.from("flood_messages").insert({
-    room: currentRoom,
-    user_id: user.id,
-    text
-  });
+  const { error } = await supabase
+    .from("flood_messages")
+    .insert({ room: "main", user_id: user.id, text });
 
-  msgInput.value = "";
+  if (!error) msgInput.value = "";
 }
 
 sendBtn.onclick = sendMessage;
 msgInput.addEventListener("keydown", e => {
   if (e.key === "Enter") sendMessage();
 });
-
-supabase
-  .channel("flood-chat")
-  .on(
-    "postgres_changes",
-    { event: "INSERT", schema: "public", table: "flood_messages" },
-    payload => {
-      if (payload.new.room !== currentRoom) return;
-      renderMessage(
-        payload.new.user_id === user.id ? myNickname : "Кто-то",
-        payload.new.text,
-        payload.new.created_at
-      );
-      messagesEl.scrollTop = messagesEl.scrollHeight;
-    }
-  )
-  .subscribe();
