@@ -404,6 +404,44 @@ body {
   letter-spacing: 0.04em;
 }
 
+/* ===== CAMPFIRE ACTION LOG ===== */
+
+.fire-log {
+  margin-top: 1.4rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255,255,255,0.12);
+}
+
+.fire-log-title {
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: #777;
+  margin-bottom: 0.6rem;
+}
+
+.fire-log-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.35rem;
+  max-height: 160px;
+  overflow: hidden;
+}
+
+.fire-log-list li {
+  font-size: 0.75rem;
+  color: #aaa;
+  line-height: 1.4;
+}
+
+.fire-log-list b {
+  color: #b43a3a; /* урониевский красный */
+  font-weight: normal;
+}
+
+
 
 /* =========================================================
    MOBILE
