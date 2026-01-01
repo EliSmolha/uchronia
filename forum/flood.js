@@ -33,10 +33,10 @@ const fireStatusEl = document.getElementById("fireStatus");
 const addWoodBtn = document.getElementById("addWoodBtn");
 const igniteBtn = document.getElementById("igniteBtn");
 
-// текстовые слои
 const fireLayer = document.getElementById("fireLayer");
 const smokeLayer = document.getElementById("smokeLayer");
-const logsLayer = document.getElementById("logsLayer");
+
+const fireLogList = document.getElementById("fireLogList");
 
 let fuel = 0;
 let isLit = false;
@@ -69,11 +69,12 @@ function renderFuel() {
 
   if (fuel <= 0) {
     isLit = false;
-    fireStatusEl.textContent = "Костер потух. Зажги его.";
+    fireStatusEl.textContent = "Костёр потух. Зажги его.";
     igniteBtn.style.display = "inline-block";
   } else {
     isLit = true;
-    fireStatusEl.textContent = "Костер горит, замешивая наши тени в темноту леса.";
+    fireStatusEl.textContent =
+      "Костёр горит, замешивая наши тени в темноту леса.";
     igniteBtn.style.display = "none";
   }
 }
@@ -94,17 +95,85 @@ async function updateCampfire(newFuel) {
   renderFuel();
 }
 
-/* ---------- USER ACTIONS ---------- */
+/* ======================================================
+   CAMPFIRE ACTION LOG
+   ====================================================== */
+
+function renderFireLogItem(text) {
+  const li = document.createElement("li");
+  li.innerHTML = text;
+  fireLogList.prepend(li);
+
+  while (fireLogList.children.length > 10) {
+    fireLogList.removeChild(fireLogList.lastChild);
+  }
+}
+
+async function loadFireLog() {
+  const { data, error } = await supabase
+    .from("campfire_events")
+    .select(`
+      type,
+      created_at,
+      profiles (
+        username,
+        display_name
+      )
+    `)
+    .order("created_at", { ascending: false })
+    .limit(10);
+
+  if (error) {
+    console.warn(error);
+    return;
+  }
+
+  fireLogList.innerHTML = "";
+
+  data.reverse().forEach(ev => {
+    const nick =
+      ev.profiles?.display_name ||
+      ev.profiles?.username ||
+      "Кто-то";
+
+    const text =
+      ev.type === "add_wood"
+        ? `<b>${nick}</b> подбросил веток в костёр`
+        : `<b>${nick}</b> зажёг костёр`;
+
+    renderFireLogItem(text);
+  });
+}
+
+await loadFireLog();
+
+/* ======================================================
+   USER ACTIONS
+   ====================================================== */
 
 addWoodBtn.onclick = async () => {
   await updateCampfire(fuel + 15);
+
+  await supabase.from("campfire_events").insert({
+    type: "add_wood",
+    user_id: user.id
+  });
 };
 
 igniteBtn.onclick = async () => {
-  if (fuel <= 0) await updateCampfire(30);
+  if (fuel <= 0) {
+    await updateCampfire(30);
+
+    await supabase.from("campfire_events").insert({
+      type: "ignite",
+      user_id: user.id
+    });
+  }
 };
 
-/* ---------- REALTIME SYNC ---------- */
+/* ======================================================
+   REALTIME SYNC — CAMPFIRE
+   ====================================================== */
 
 supabase
   .channel("campfire-state")
@@ -119,17 +188,35 @@ supabase
   )
   .subscribe();
 
-/* ---------- FUEL DECAY (ONE CLIENT ONLY) ---------- */
+supabase
+  .channel("campfire-events")
+  .on(
+    "postgres_changes",
+    { event: "INSERT", schema: "public", table: "campfire_events" },
+    async payload => {
+      const ev = payload.new;
+      if (!ev) return;
 
-// ⚠️ чтобы не было -10 в секунду от всех
-const FIRE_MASTER_ID = "ID_АДМИНА_ИЛИ_ПЕРВОГО";
+      const { data } = await supabase
+        .from("profiles")
+        .select("username, display_name")
+        .eq("id", ev.user_id)
+        .single();
 
-if (user.id === FIRE_MASTER_ID) {
-  setInterval(async () => {
-    if (fuel <= 0) return;
-    await updateCampfire(fuel - 1);
-  }, 5000);
-}
+      const nick =
+        data?.display_name ||
+        data?.username ||
+        "Кто-то";
+
+      const text =
+        ev.type === "add_wood"
+          ? `<b>${nick}</b> подбросил веток в костёр`
+          : `<b>${nick}</b> зажёг костёр`;
+
+      renderFireLogItem(text);
+    }
+  )
+  .subscribe();
 
 /* ======================================================
    TEXT FIRE VISUALS
@@ -169,7 +256,7 @@ setInterval(() => {
 }, 700);
 
 /* ======================================================
-   CHAT — БЕЗ ИЗМЕНЕНИЙ ПО ЛОГИКЕ
+   CHAT — БЕЗ ИЗМЕНЕНИЙ
    ====================================================== */
 
 const roomsEl = document.getElementById("rooms");
@@ -201,8 +288,6 @@ function renderMessage(author, text, time) {
   messagesEl.appendChild(wrap);
 }
 
-/* ---------- LOAD ---------- */
-
 async function loadMessages() {
   messagesEl.innerHTML = "";
 
@@ -228,8 +313,6 @@ async function loadMessages() {
 
 await loadMessages();
 
-/* ---------- SEND ---------- */
-
 async function sendMessage() {
   const text = msgInput.value.trim();
   if (!text) return;
@@ -247,8 +330,6 @@ sendBtn.onclick = sendMessage;
 msgInput.addEventListener("keydown", e => {
   if (e.key === "Enter") sendMessage();
 });
-
-/* ---------- REALTIME CHAT ---------- */
 
 supabase
   .channel("flood-chat")
